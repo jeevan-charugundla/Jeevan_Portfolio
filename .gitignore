@@ -3,3 +3,12 @@
 node_modules/
 .DS_Store
 *.log
+
+# Portfolio migration artifacts
+*_payload.json
+fix_*.py
+fix_*.ps1
+remove_old_section.ps1
+apply_all.py
+stream_replace.ps1
+scratch/

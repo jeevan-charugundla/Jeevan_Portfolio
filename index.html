@@ -128,6 +128,15 @@
             transition: width 0.2s, height 0.2s, background-color 0.2s, transform 0.1s;
         }
 
+        #cursor.cursor-dark {
+            background-color: #000 !important;
+            mix-blend-mode: normal !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            width: 24px !important;
+            height: 24px !important;
+            z-index: 100000;
+        }
+
         /* Animations */
         .marquee-container {
             overflow: hidden;
@@ -214,75 +223,161 @@
 
         /* ===== SPLASH SCREEN ===== */
         #splash-screen {
-            position: fixed; inset: 0; z-index: 99999;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
             background: #FFFDF5;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
+
         .splash-corner {
-            position: absolute; width: 40px; height: 40px;
+            position: absolute;
+            width: 40px;
+            height: 40px;
             border: 4px solid #000;
         }
-        .splash-corner--tl { top: 24px; left: 24px; border-right: none; border-bottom: none; }
-        .splash-corner--tr { top: 24px; right: 24px; border-left: none; border-bottom: none; }
-        .splash-corner--bl { bottom: 24px; left: 24px; border-right: none; border-top: none; }
-        .splash-corner--br { bottom: 24px; right: 24px; border-left: none; border-top: none; }
+
+        .splash-corner--tl {
+            top: 24px;
+            left: 24px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .splash-corner--tr {
+            top: 24px;
+            right: 24px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .splash-corner--bl {
+            bottom: 24px;
+            left: 24px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .splash-corner--br {
+            bottom: 24px;
+            right: 24px;
+            border-left: none;
+            border-top: none;
+        }
+
         .splash-geo-sq {
-            position: absolute; width: 28px; height: 28px;
-            border: 3px solid #000; background: #FBFF48;
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border: 3px solid #000;
+            background: #FBFF48;
         }
+
         .splash-geo-circle {
-            position: absolute; width: 22px; height: 22px;
-            border-radius: 50%; border: 3px solid #000;
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 3px solid #000;
         }
+
         #splash-name-wrap {
-            position: relative; display: inline-block; line-height: 1;
+            position: relative;
+            display: inline-block;
+            line-height: 1;
         }
+
         #splash-name-outline {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 800;
             font-size: clamp(72px, 18vw, 200px);
-            line-height: 1; letter-spacing: -0.03em;
+            line-height: 1;
+            letter-spacing: -0.03em;
             color: transparent;
             -webkit-text-stroke: 3px #000;
-            position: relative; z-index: 1; white-space: nowrap;
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
         }
+
         #splash-name-fill {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 800;
             font-size: clamp(72px, 18vw, 200px);
-            line-height: 1; letter-spacing: -0.03em;
+            line-height: 1;
+            letter-spacing: -0.03em;
             color: #121212;
             -webkit-text-stroke: 3px #000;
-            position: absolute; top: 0; left: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
             white-space: nowrap;
             clip-path: inset(0 100% 0 0);
             text-shadow: none;
         }
+
         #splash-label {
             font-family: 'JetBrains Mono', monospace;
             font-size: clamp(10px, 2vw, 14px);
-            letter-spacing: 0.3em; text-transform: uppercase;
-            color: #000; margin-top: 18px; text-align: center;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #000;
+            margin-top: 18px;
+            text-align: center;
             opacity: 0;
         }
+
         @keyframes splash-fill-lr {
-            0%   { clip-path: inset(0 100% 0 0); }
-            100% { clip-path: inset(0 0% 0 0); }
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            100% {
+                clip-path: inset(0 0% 0 0);
+            }
         }
+
         @keyframes splash-pop {
-            0%   { transform: scale(1); }
-            50%  { transform: scale(1.04); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.04);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
+
         @keyframes splash-label-in {
-            0%   { opacity: 0; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes splash-exit {
-            0%   { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100%); opacity: 0; }
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
         }
+
         #splash-screen.do-exit {
             animation: splash-exit 0.55s cubic-bezier(0.76, 0, 0.24, 1) forwards;
             pointer-events: none;
@@ -290,172 +385,1349 @@
 
         /* ===== DEV MODE STYLES ===== */
         #dev-backdrop {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55); z-index: 9000;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 9000;
         }
-        #dev-backdrop.visible { display: block; }
+
+        #dev-backdrop.visible {
+            display: block;
+        }
+
         #dev-confirm {
-            display: none; position: fixed; inset: 0; z-index: 9100;
-            align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9100;
+            align-items: center;
+            justify-content: center;
         }
-        #dev-confirm.visible { display: flex; }
+
+        #dev-confirm.visible {
+            display: flex;
+        }
+
         #dev-confirm-box {
-            background: #FFFDF5; border: 4px solid #000;
+            background: #FFFDF5;
+            border: 4px solid #000;
             box-shadow: 6px 6px 0 #000;
-            padding: 40px 48px; text-align: center; min-width: 340px;
+            padding: 40px 48px;
+            text-align: center;
+            min-width: 340px;
             position: relative;
         }
-        @keyframes dev-snap-in {
-            0%  { transform: scale(0.93) translate(-2px,2px); opacity:0; }
-            60% { transform: scale(1.02); opacity:1; }
-            100%{ transform: scale(1); opacity:1; }
-        }
-        #dev-confirm-box.jitter {
-            animation: dev-snap-in 0.12s cubic-bezier(.36,.07,.19,.97) both,
-                       dev-jitter 0.2s linear 1 0.12s;
-        }
-        @keyframes dev-jitter {
-            0%,100%{ transform:translate(0,0); }
-            25%    { transform:translate(-1px,1px); }
-            50%    { transform:translate(1px,-1px); }
-            75%    { transform:translate(-1px,-1px); }
-        }
-        #dev-confirm-title {
-            font-family:'Space Grotesk',sans-serif; font-weight:800;
-            font-size:2rem; letter-spacing:-0.02em; line-height:1;
-            margin-bottom:10px; border-bottom:3px solid #000; padding-bottom:10px;
-        }
-        #dev-confirm-sub { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:#555; margin-bottom:18px; }
-        #dev-confirm-q   { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1rem; margin-bottom:28px; letter-spacing:0.05em; }
-        .dev-btn {
-            font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.9rem;
-            padding:8px 28px; border:3px solid #000; cursor:pointer;
-            transition:transform 0.08s,box-shadow 0.08s; box-shadow:3px 3px 0 #000;
-            letter-spacing:0.06em;
-        }
-        .dev-btn:hover { transform:translate(2px,2px); box-shadow:1px 1px 0 #000; }
-        .dev-btn:active { transform:translate(3px,3px); box-shadow:none; }
-        .dev-btn-yes { background:#121212; color:#fff; }
-        .dev-btn-yes:hover { background:#000; }
-        .dev-btn-no  { background:#FFFDF5; color:#000; cursor:none; }
-        #dev-console { display:none; position:fixed; inset:0; z-index:9200; align-items:center; justify-content:center; }
-        #dev-console.visible { display:flex; }
-        #dev-console-box {
-            background:#0a0a0a; border:4px solid #000;
-            box-shadow:8px 8px 0 #33FF57;
-            width:min(90vw,780px); max-height:88vh;
-            display:flex; flex-direction:column; overflow:hidden;
-        }
-        @keyframes dev-console-in { 0%{transform:scale(0.96);opacity:0;} 100%{transform:scale(1);opacity:1;} }
-        #dev-console-box { animation:dev-console-in 0.18s cubic-bezier(0.19,1,0.22,1) forwards; }
-        #dev-console-header {
-            display:flex; align-items:center; justify-content:space-between;
-            padding:10px 18px; border-bottom:3px solid #1a1a1a; background:#111;
-        }
-        #dev-console-title {
-            font-family:'JetBrains Mono',monospace; font-weight:700;
-            font-size:0.78rem; color:#33FF57; letter-spacing:0.12em;
-            display:flex; align-items:center; gap:8px;
-        }
-        #dev-status-dot {
-            width:8px; height:8px; border-radius:50%; background:#33FF57;
-            display:inline-block; animation:blink-dot 1.1s step-end infinite;
-        }
-        @keyframes blink-dot { 0%,100%{opacity:1;} 50%{opacity:0;} }
-        #dev-exit-btn {
-            font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700;
-            color:#ff4444; background:transparent; border:2px solid #ff4444;
-            padding:3px 12px; cursor:pointer; letter-spacing:0.1em;
-            transition:background 0.1s,color 0.1s;
-        }
-        #dev-exit-btn:hover { background:#ff4444; color:#fff; }
-        #dev-output {
-            flex:1; overflow-y:auto; padding:18px 20px 8px;
-            font-family:'JetBrains Mono',monospace; font-size:0.82rem;
-            color:#e0e0e0; line-height:1.7;
-            scrollbar-width:thin; scrollbar-color:#33FF57 #111;
-        }
-        .dev-line-prompt{color:#33FF57;} .dev-line-cmd{color:#FBFF48;}
-        .dev-line-out{color:#c8c8c8;} .dev-line-err{color:#ff4444;} .dev-line-key{color:#FF70A6;}
-        .dev-blink-cursor::after { content:'_'; animation:blink-dot 0.8s step-end infinite; color:#33FF57; }
-        #dev-cmds {
-            display:flex; flex-wrap:wrap; gap:8px; padding:12px 20px;
-            border-top:3px solid #1a1a1a; background:#0e0e0e;
-        }
-        .dev-cmd-btn {
-            font-family:'JetBrains Mono',monospace; font-size:0.78rem; font-weight:700;
-            padding:5px 14px; border:2px solid #33FF57; background:transparent; color:#33FF57;
-            cursor:pointer; letter-spacing:0.08em;
-            transition:background 0.08s,color 0.08s,transform 0.08s,box-shadow 0.08s;
-            box-shadow:2px 2px 0 #33FF57;
-        }
-        .dev-cmd-btn:hover { background:#33FF57; color:#0a0a0a; transform:translate(2px,2px); box-shadow:none; }
-        .dev-cmd-btn.exit-cmd { border-color:#ff4444; color:#ff4444; box-shadow:2px 2px 0 #ff4444; }
-        .dev-cmd-btn.exit-cmd:hover { background:#ff4444; color:#fff; }
-        @keyframes dev-glitch { 0%{filter:none;} 10%{filter:hue-rotate(180deg) invert(1);} 20%{filter:none;} }
-        .glitch-flash { animation:dev-glitch 0.15s steps(1) forwards; }
-        @keyframes dev-console-out { 0%{transform:scale(1);opacity:1;} 100%{transform:scale(0.94);opacity:0;} }
-        #dev-console-box.closing { animation:dev-console-out 0.2s cubic-bezier(0.76,0,0.24,1) forwards; }
 
-        /* ===== SYSTEM_THOUGHTS CARD STREAM ===== */
-        @keyframes thought-ltr {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        @keyframes dev-snap-in {
+            0% {
+                transform: scale(0.93) translate(-2px, 2px);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.02);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
-        @keyframes thought-rtl {
-            0%   { transform: translateX(-50%); }
-            100% { transform: translateX(0); }
+
+        #dev-confirm-box.jitter {
+            animation: dev-snap-in 0.12s cubic-bezier(.36, .07, .19, .97) both,
+                dev-jitter 0.2s linear 1 0.12s;
         }
-        .thought-row { overflow: hidden; position: relative; }
-        .thought-track { display: flex; align-items: stretch; width: max-content; will-change: transform; }
-        .thought-row:hover .thought-track { animation-play-state: paused; }
-        .thought-card {
-            flex-shrink: 0;
-            width: 280px;
+
+        @keyframes dev-jitter {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(-1px, 1px);
+            }
+
+            50% {
+                transform: translate(1px, -1px);
+            }
+
+            75% {
+                transform: translate(-1px, -1px);
+            }
+        }
+
+        #dev-confirm-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+        }
+
+        #dev-confirm-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #555;
+            margin-bottom: 18px;
+        }
+
+        #dev-confirm-q {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 28px;
+            letter-spacing: 0.05em;
+        }
+
+        .dev-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 8px 28px;
+            border: 3px solid #000;
+            cursor: pointer;
+            transition: transform 0.08s, box-shadow 0.08s;
+            box-shadow: 3px 3px 0 #000;
+            letter-spacing: 0.06em;
+        }
+
+        .dev-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #000;
+        }
+
+        .dev-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+
+        .dev-btn-yes {
+            background: #121212;
+            color: #fff;
+        }
+
+        .dev-btn-yes:hover {
+            background: #000;
+        }
+
+        .dev-btn-no {
+            background: #FFFDF5;
+            color: #000;
+            cursor: none;
+        }
+
+        #dev-console {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dev-console.visible {
+            display: flex;
+        }
+
+        #dev-console-box {
+            background: #0a0a0a;
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 #33FF57;
+            width: min(90vw, 780px);
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        @keyframes dev-console-in {
+            0% {
+                transform: scale(0.96);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #dev-console-box {
+            animation: dev-console-in 0.18s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        #dev-console-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            border-bottom: 3px solid #1a1a1a;
+            background: #111;
+        }
+
+        #dev-console-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: #33FF57;
+            letter-spacing: 0.12em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #dev-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #33FF57;
+            display: inline-block;
+            animation: blink-dot 1.1s step-end infinite;
+        }
+
+        @keyframes blink-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        #dev-exit-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ff4444;
+            background: transparent;
+            border: 2px solid #ff4444;
+            padding: 3px 12px;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: background 0.1s, color 0.1s;
+        }
+
+        #dev-exit-btn:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        #dev-output {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 20px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #e0e0e0;
+            line-height: 1.7;
+            scrollbar-width: thin;
+            scrollbar-color: #33FF57 #111;
+        }
+
+        .dev-line-prompt {
+            color: #33FF57;
+        }
+
+        .dev-line-cmd {
+            color: #FBFF48;
+        }
+
+        .dev-line-out {
+            color: #c8c8c8;
+        }
+
+        .dev-line-err {
+            color: #ff4444;
+        }
+
+        .dev-line-key {
+            color: #FF70A6;
+        }
+
+        .dev-blink-cursor::after {
+            content: '_';
+            animation: blink-dot 0.8s step-end infinite;
+            color: #33FF57;
+        }
+
+        #dev-cmds {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 20px;
+            border-top: 3px solid #1a1a1a;
+            background: #0e0e0e;
+        }
+
+        .dev-cmd-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border: 2px solid #33FF57;
+            background: transparent;
+            color: #33FF57;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: background 0.08s, color 0.08s, transform 0.08s, box-shadow 0.08s;
+            box-shadow: 2px 2px 0 #33FF57;
+        }
+
+        .dev-cmd-btn:hover {
+            background: #33FF57;
+            color: #0a0a0a;
+            transform: translate(2px, 2px);
+            box-shadow: none;
+        }
+
+        .dev-cmd-btn.exit-cmd {
+            border-color: #ff4444;
+            color: #ff4444;
+            box-shadow: 2px 2px 0 #ff4444;
+        }
+
+        .dev-cmd-btn.exit-cmd:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        @keyframes dev-glitch {
+            0% {
+                filter: none;
+            }
+
+            10% {
+                filter: hue-rotate(180deg) invert(1);
+            }
+
+            20% {
+                filter: none;
+            }
+        }
+
+        .glitch-flash {
+            animation: dev-glitch 0.15s steps(1) forwards;
+        }
+
+        @keyframes dev-console-out {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.94);
+                opacity: 0;
+            }
+        }
+
+        #dev-console-box.closing {
+            animation: dev-console-out 0.2s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        }
+
+        /* ===== CERTIFICATIONS AND ACHIEVEMENTS STYLES ===== */
+        @keyframes cert-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .cert-row {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cert-track {
+            display: flex;
+            align-items: stretch;
+            width: max-content;
+            will-change: transform;
+        }
+
+        .cert-row:hover .cert-track {
+            animation-play-state: paused;
+        }
+
+        /* Shared Card Base Logic (Marquee & Grid) */
+        .cert-card,
+        .cert-grid-card {
             background: #0f0f0f;
-            border: 3px solid rgba(255,255,255,0.1);
-            margin-right: 20px;
-            padding: 22px 22px 18px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none !important;
+            -webkit-user-drag: none !important;
         }
-        .thought-card:hover {
-            transform: scale(1.03) rotate(0.5deg);
+
+        /* Marquee Specific */
+        .cert-card {
+            flex-shrink: 0;
+            width: 300px;
+            margin-right: 20px;
+            padding: 24px 20px 18px;
         }
-        .thought-card .tc-top-bar {
-            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+
+        /* Hover States - Depth effect for Marquee, Aggressive for Grid */
+        @media (hover: hover) and (pointer: fine) {
+            .cert-card:hover {
+                transform: scale(1.02);
+                /* Base scale, JS will add translate */
+                z-index: 10 !important;
+                border-color: var(--hover-color, #33FF57) !important;
+                filter: brightness(1.1);
+                /* box-shadow is now controlled by JS */
+            }
         }
-        .thought-card .tc-header {
-            display: flex; justify-content: space-between; align-items: flex-start;
+
+        .cert-grid-card:hover {
+            transform: scale(1.1) translateY(-12px) rotate(1.5deg);
+            z-index: 100 !important;
+            box-shadow: 12px 12px 0 var(--hover-color, #33FF57) !important;
+            border-color: var(--hover-color, #33FF57) !important;
+        }
+
+        /* Disable selection and drag on all contents */
+        .cert-card *,
+        .cert-grid-card * {
+            pointer-events: none;
+            user-select: none !important;
+            -webkit-user-drag: none !important;
+        }
+
+        .cert-card:active,
+        .cert-grid-card:active {
+            transform: scale(0.94) !important;
+            box-shadow: 2px 2px 0 var(--hover-color, #33FF57) !important;
+            transition: all 0.05s ease;
+        }
+
+        /* Common card elements */
+        .cert-card .cert-top-bar,
+        .cert-grid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--hover-color, #33FF57);
+            opacity: 0.8;
+        }
+
+        .cert-header,
+        .cert-grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 12px;
         }
-        .thought-card .tc-id {
+
+        .cert-id,
+        .cert-grid-id {
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; font-size: 0.7rem;
-            letter-spacing: 0.12em; text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
-        .thought-card .tc-tag {
+
+        .cert-status,
+        .cert-grid-status {
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 700; font-size: 0.65rem;
-            padding: 2px 7px; border: 1px solid;
-            text-transform: uppercase; letter-spacing: 0.1em;
+            font-weight: 700;
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border: 2px solid;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(0, 0, 0, 0.3);
         }
-        .thought-card .tc-text {
+
+        .cert-title,
+        .cert-grid-title {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem; line-height: 1.6;
-            color: rgba(255,255,255,0.85);
-            font-weight: 500;
+            font-size: 1.05rem;
+            line-height: 1.3;
+            color: #fff;
+            font-weight: 700;
+            margin-top: 8px;
         }
-        .thought-card .tc-hint {
+
+        .cert-desc,
+        .cert-grid-desc {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem; margin-top: 14px;
-            opacity: 0; transition: opacity 0.15s;
-            display: flex; align-items: center; gap: 4px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.6);
         }
-        .thought-card:hover .tc-hint { opacity: 1; }
-        .tc-cursor { animation: blink-dot 0.8s step-end infinite; }
+
+        .cert-card .cert-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .cert-hint,
+        .cert-grid-cta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            margin-top: 18px;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .cert-hint {
+            transition: opacity 0.25s ease-out;
+            margin-top: 12px;
+        }
+
+        .cert-grid-cta {
+            transition: opacity 0.2s;
+        }
+
+        .cert-card:hover .cert-hint,
+        .cert-grid-card:hover .cert-grid-cta {
+            opacity: 1;
+        }
+
+        .tc-cursor {
+            animation: blink-dot 0.8s step-end infinite;
+        }
+
+        /* View All Button Refinement */
+        .view-all-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 8px 18px;
+            border: 3px solid #33FF57;
+            background: transparent;
+            color: #33FF57;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 4px 4px 0 #33FF57;
+            text-transform: uppercase;
+        }
+
+        .view-all-btn:hover {
+            background: #33FF57;
+            color: #000;
+            transform: translate(3px, 3px) scale(1.05);
+            box-shadow: none;
+        }
+
+        /* Full Panel Overlay */
+        #cert-panel {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9500;
+            background: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #cert-panel.visible {
+            display: flex;
+        }
+
+        @keyframes panel-in {
+            0% {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #cert-panel-box {
+            background: #0a0a0a;
+            border: 4px solid #33FF57;
+            box-shadow: 8px 8px 0 #33FF57;
+            width: min(95vw, 1000px);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: panel-in 0.25s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        @keyframes panel-out {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+        }
+
+        #cert-panel-box.closing {
+            animation: panel-out 0.2s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        }
+
+        #cert-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 3px solid #1a1a1a;
+            background: #111;
+        }
+
+        #cert-panel-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #33FF57;
+            letter-spacing: 0.12em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #cert-panel-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .panel-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border: 2px solid;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: all 0.15s;
+        }
+
+        .panel-btn.close-btn {
+            border-color: #ff4444;
+            color: #ff4444;
+            background: transparent;
+        }
+
+        .panel-btn.close-btn:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        #cert-panel-search {
+            padding: 14px 20px;
+            border-bottom: 3px solid #1a1a1a;
+            background: #0e0e0e;
+        }
+
+        #cert-search-input {
+            width: 100%;
+            padding: 10px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: #33FF57;
+            outline: none;
+        }
+
+        #cert-search-input::placeholder {
+            color: #666;
+        }
+
+        #cert-search-input:focus {
+            border-color: #33FF57;
+        }
+
+        /* PREMIUM PANEL TABS */
+        .cert-tab-bar {
+            display: flex;
+            gap: 12px;
+            padding: 15px 20px;
+            border-bottom: 3px solid #1a1a1a;
+            background: #0e0e0e;
+        }
+
+        .cert-tab {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 8px 18px;
+            border: 2px solid #333;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .cert-tab:hover {
+            transform: scale(1.05) translateY(-2px);
+            border-color: #33FF57;
+            box-shadow: 4px 4px 0 rgba(51, 255, 87, 0.3);
+            cursor: url('https://cdn-icons-png.flaticon.com/512/82/82200.png'), auto;
+            /* Fallback to crosshair/block style */
+        }
+
+        .cert-tab:active {
+            transform: scale(0.95) translateY(0);
+            box-shadow: 1px 1px 0 black;
+        }
+
+        .cert-tab.active {
+            background: #33FF57;
+            color: #0a0a0a;
+            border: 3px solid black;
+            box-shadow: 4px 4px 0 black;
+        }
+
+        .cert-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: #33FF57;
+            box-shadow: 0 0 10px #33FF57;
+        }
+
+        /* SYSTEM STATUS AREA */
+        #cert-status-area {
+            background: #080808;
+            padding: 10px 20px;
+            border-bottom: 2px solid #1a1a1a;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cert-system-msg {
+            color: #33FF57;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .cert-cursor {
+            display: none;
+            width: 8px;
+            height: 1.2em;
+            background: #33FF57;
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink-dot 0.8s step-end infinite;
+        }
+
+        /* BRUTAL LOADER */
+        .cert-loader-container {
+            height: 4px;
+            width: 100%;
+            background: #111;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        /* ===== CERT RECORD MODAL (DETAILED VIEW) ===== */
+        .cert-record-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cert-record-overlay.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .cert-record-box {
+            background: #fdfdfd;
+            border: 4px solid #000;
+            box-shadow: 12px 12px 0 #000;
+            width: 100%;
+            max-width: 950px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cert-record-overlay.visible .cert-record-box {
+            transform: scale(1);
+        }
+
+        .cert-record-header {
+            border-bottom: 4px solid #000;
+            padding: 15px 25px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .cert-record-header-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cert-record-close {
+            background: #FF70A6;
+            color: #000;
+            border: 2px solid #000;
+            padding: 5px 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 #000;
+            transition: all 0.1s;
+        }
+
+        .cert-record-close:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .cert-record-close:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #000;
+        }
+
+        .cert-record-body {
+            display: grid;
+            grid-template-columns: 45% 1fr;
+            min-height: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .cert-record-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left: Image Sector */
+        .cert-record-image-side {
+            padding: 40px;
+            background: #f0f0f0;
+            border-right: 4px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .cert-record-image-side {
+                border-right: none;
+                border-bottom: 4px solid #000;
+            }
+        }
+
+        .cert-image-frame {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #000;
+            border: 4px solid #000;
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1) contrast(1.2);
+            transition: filter 0.3s;
+        }
+
+        .cert-image-frame:hover img {
+            filter: grayscale(0) contrast(1);
+        }
+
+        .cert-image-placeholder {
+            color: #33FF57;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .cert-record-meta-small {
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #666;
+            width: 100%;
+        }
+
+        /* Right: Content Sector */
+        .cert-record-content-side {
+            padding: 40px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cert-record-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            letter-spacing: -0.02em;
+        }
+
+        .cert-record-stats {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .cert-stat-item {
+            border: 2px solid #000;
+            padding: 8px 15px;
+            background: #fff;
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .cert-stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: #666;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .cert-stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .cert-record-desc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #333;
+            max-width: 500px;
+        }
+
+        .cert-record-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .cert-tag {
+            background: #000;
+            color: #fff;
+            padding: 4px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .record-action-btn {
+            margin-top: 30px;
+            background: #8FE3A1;
+            /* Light Green */
+            border: 3px solid #000;
+            padding: 12px 25px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 0 #000;
+            transition: all 0.15s ease-out;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .record-action-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0 #000;
+            filter: brightness(1.05);
+        }
+
+        .record-action-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .record-action-btn.inspecting {
+            background: #f0f0f0;
+            color: #888;
+            pointer-events: none;
+        }
+
+        .record-action-btn.ready {
+            background: #33FF57;
+            color: #000;
+        }
+
+        /* ===== ENHANCED RECORD MODAL COMPONENTS ===== */
+
+        .cert-inspectable-section {
+            margin-top: 25px;
+            border: 2px solid #000;
+            background: #f8f8f8;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+        }
+
+        .cert-inspectable-section.visible {
+            opacity: 1;
+            max-height: 1000px; /* Allow space for content */
+        }
+
+        .cert-inspect-header {
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+        
+        .cert-system-logs {
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #555;
+            min-height: 90px;
+            transition: all 0.3s;
+        }
+        .cert-system-logs p {
+            margin: 0 0 4px;
+        }
+
+        .cert-inspect-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .cert-inspect-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cert-inspect-block {
+            font-size: 0.8rem;
+        }
+
+        .cert-inspect-label {
+            color: #33FF57;
+            background: #000;
+            display: inline-block;
+            padding: 2px 6px;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+        }
+
+        .cert-inspect-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cert-inspect-list li {
+            padding-left: 15px;
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .cert-inspect-list li::before {
+            content: '*';
+            position: absolute;
+            left: 0;
+            color: #ff70a6;
+        }
+
+        .cert-insight-box {
+            grid-column: 1 / -1;
+            background: #000;
+            color: #fff;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid #33FF57;
+        }
+
+        .cert-insight-quote {
+            font-style: italic;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .cert-image-frame.highlighted {
+            border-color: #33FF57 !important;
+            box-shadow: 0 0 20px rgba(51, 255, 87, 0.4) !important;
+            animation: borderPulse 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderPulse {
+            from {
+                border-color: #33FF57;
+                box-shadow: 0 0 10px rgba(51, 255, 87, 0.2);
+            }
+
+            to {
+                border-color: #33FF57;
+                box-shadow: 0 0 30px rgba(51, 255, 87, 0.6);
+            }
+        }
+
+        .cert-record-image-side img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #000;
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        #cert-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #0a0a0a;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .cert-panel-refreshing {
+            animation: systemFlicker 0.15s ease-out;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .cert-grid-card {
+            background: #111;
+            border: 3px solid #222;
+            padding: 24px;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-drag: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-grid-card.animate-in {
+            animation: cardIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .cert-grid-card:hover {
+            border-color: #33FF57 !important;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .cert-grid-card:active {
+            transform: scale(0.96);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .cert-grid-card img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes systemFlicker {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes loadBarRun {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .cert-grid-card .cert-grid-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: #33FF57;
+            margin-bottom: 6px;
+        }
+
+        .cert-grid-card .cert-grid-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .cert-grid-card .cert-grid-status {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            padding: 2px 8px;
+            border: 1px solid;
+            margin-bottom: 10px;
+        }
+
+        .cert-grid-card .cert-grid-desc {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .cert-grid-cta {
+            margin-top: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: #33FF57;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: opacity 0.2s;
+        }
+
+        .cert-grid-card:hover .cert-grid-cta {
+            opacity: 1;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #ff4444;
+            font-size: 0.85rem;
+        }
+
+        .no-results::before {
+            content: '> ';
+        }
+
+        .no-results::after {
+            content: '_';
+            animation: blink-dot 0.8s step-end infinite;
+        }
+
+        @keyframes loading-bar {
+            0% {
+                width: 0;
+            }
+
+            50% {
+                width: 70%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-bar {
+            height: 4px;
+            background: #33FF57;
+            animation: loading-bar 1.5s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -502,7 +1774,7 @@
                     class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover">/ABOUT</a>
                 <a href="#skills"
                     class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover">/SKILLS</a>
-                <a href="#experience"
+                <a href="#reports"
                     class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover">/LOGS</a>
                 <a href="#projects"
                     class="px-3 py-1 font-mono font-bold text-sm hover:bg-black hover:text-white transition-colors cursor-hover">/WORK</a>
@@ -522,7 +1794,7 @@
             <div id="dev-confirm-q">Are you sure?</div>
             <div style="display:flex;gap:16px;justify-content:center;">
                 <button class="dev-btn dev-btn-yes" id="dev-yes">[ YES ]</button>
-                <button class="dev-btn dev-btn-no"  id="dev-no" >[ NO  ]</button>
+                <button class="dev-btn dev-btn-no" id="dev-no">[ NO ]</button>
             </div>
         </div>
     </div>
@@ -538,6 +1810,7 @@
                 <button class="dev-cmd-btn" data-cmd="skills">skills</button>
                 <button class="dev-cmd-btn" data-cmd="projects">projects</button>
                 <button class="dev-cmd-btn" data-cmd="contact">contact</button>
+                <button class="dev-cmd-btn" data-cmd="credentials">credentials</button>
                 <button class="dev-cmd-btn exit-cmd" data-cmd="exit">exit</button>
             </div>
         </div>
@@ -1191,329 +2464,926 @@
         </div>
     </section>
 
-    <section id="reports" class="py-20 bg-neo-black border-t-4 border-black overflow-hidden relative">
+    <section id="reports" class="py-12 bg-neo-black border-t-4 border-black overflow-hidden relative">
 
         <!-- Section header -->
-        <div class="max-w-7xl mx-auto px-4 mb-10">
-            <div class="flex items-center gap-2 bg-white/5 border-2 border-white/10 p-4 inline-flex shadow-hard shadow-neo-green/20">
-                <div class="flex gap-2">
-                    <div class="h-3 w-3 bg-red-500 rounded-full border border-black"></div>
-                    <div class="h-3 w-3 bg-yellow-500 rounded-full border border-black"></div>
-                    <div class="h-3 w-3 bg-green-500 rounded-full border border-black"></div>
+        <div class="max-w-7xl mx-auto px-4 mb-6">
+            <div class="flex items-center justify-between bg-white/5 border-2 border-white/10 p-4 shadow-hard"
+                style="box-shadow: 4px 4px 0 #33FF57;">
+                <div class="flex items-center gap-2">
+                    <div class="flex gap-2">
+                        <div class="h-3 w-3 bg-red-500 rounded-full border border-black"></div>
+                        <div class="h-3 w-3 bg-yellow-500 rounded-full border border-black"></div>
+                        <div class="h-3 w-3 bg-green-500 rounded-full border border-black"></div>
+                    </div>
+                    <h2 class="font-mono text-white text-xl font-bold ml-4 tracking-tighter">
+                        CERTIFICATIONS_AND_ACHIEVEMENTS.log</h2>
                 </div>
-                <h2 class="font-mono text-white text-xl font-bold ml-4 tracking-tighter">SYSTEM_THOUGHTS.log</h2>
-                <div class="ml-8 px-2 bg-neo-green text-black text-[10px] font-black uppercase">[ LIVE_FEED ]</div>
+                <button class="view-all-btn" onclick="openCertPanel()">[ VIEW ALL ]</button>
             </div>
         </div>
 
         <!-- Fade edge masks -->
         <div class="pointer-events-none absolute inset-y-20 left-0 w-24 z-10"
-             style="background:linear-gradient(to right,#0a0a0a 0%,transparent 100%);"></div>
+            style="background:linear-gradient(to right,#0a0a0a 0%,transparent 100%);"></div>
         <div class="pointer-events-none absolute inset-y-20 right-0 w-24 z-10"
-             style="background:linear-gradient(to left,#0a0a0a 0%,transparent 100%);"></div>
+            style="background:linear-gradient(to left,#0a0a0a 0%,transparent 100%);"></div>
 
-        
-        <div class="thought-row py-4" style="border-top:1px solid rgba(255,255,255,0.07);">
-            <div class="thought-track" style="animation:thought-ltr 35s linear infinite;">
-                <div class="thought-card" data-log="LOG_001"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_001</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">Most AI apps fail not because of bad models, but because of weak product thinking.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_003"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_003</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">Shipping something imperfect beats designing something perfect forever.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_005"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_005</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">AI is easy to demo. Hard to ship reliably.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_006"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_006</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">I don't just build apps. I build systems that run them.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_001"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_001</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">Most AI apps fail not because of bad models, but because of weak product thinking.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_003"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_003</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">Shipping something imperfect beats designing something perfect forever.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_005"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_005</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">AI is easy to demo. Hard to ship reliably.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_006"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_006</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">I don't just build apps. I build systems that run them.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div></div>
-        </div>
-        
-        <div class="thought-row py-4" style="border-top:1px solid rgba(255,255,255,0.07);">
-            <div class="thought-track" style="animation:thought-rtl 48s linear infinite;">
-                <div class="thought-card" data-log="LOG_002"
-                     style="box-shadow:4px 4px 0 #A855F7; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #A855F7'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #A855F7'">
-                    <div class="tc-top-bar" style="background:#A855F7;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#A855F7;">LOG_002</span>
-                        <span class="tc-tag" style="color:#A855F7;border-color:#A855F740;background:#A855F718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it doesn't work in real-time, it's not ready for users.</div>
-                    <div class="tc-hint" style="color:#A855F7;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_004"
-                     style="box-shadow:4px 4px 0 #A855F7; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #A855F7'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #A855F7'">
-                    <div class="tc-top-bar" style="background:#A855F7;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#A855F7;">LOG_004</span>
-                        <span class="tc-tag" style="color:#A855F7;border-color:#A855F740;background:#A855F718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">Latency is a UX problem, not just a backend problem.</div>
-                    <div class="tc-hint" style="color:#A855F7;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_007"
-                     style="box-shadow:4px 4px 0 #33FF57; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #33FF57'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #33FF57'">
-                    <div class="tc-top-bar" style="background:#33FF57;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#33FF57;">LOG_007</span>
-                        <span class="tc-tag" style="color:#33FF57;border-color:#33FF5740;background:#33FF5718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it's not deployed, it doesn't exist.</div>
-                    <div class="tc-hint" style="color:#33FF57;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_001"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_001</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">Most AI apps fail not because of bad models, but because of weak product thinking.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_002"
-                     style="box-shadow:4px 4px 0 #A855F7; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #A855F7'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #A855F7'">
-                    <div class="tc-top-bar" style="background:#A855F7;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#A855F7;">LOG_002</span>
-                        <span class="tc-tag" style="color:#A855F7;border-color:#A855F740;background:#A855F718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it doesn't work in real-time, it's not ready for users.</div>
-                    <div class="tc-hint" style="color:#A855F7;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_004"
-                     style="box-shadow:4px 4px 0 #A855F7; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #A855F7'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #A855F7'">
-                    <div class="tc-top-bar" style="background:#A855F7;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#A855F7;">LOG_004</span>
-                        <span class="tc-tag" style="color:#A855F7;border-color:#A855F740;background:#A855F718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">Latency is a UX problem, not just a backend problem.</div>
-                    <div class="tc-hint" style="color:#A855F7;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_007"
-                     style="box-shadow:4px 4px 0 #33FF57; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #33FF57'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #33FF57'">
-                    <div class="tc-top-bar" style="background:#33FF57;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#33FF57;">LOG_007</span>
-                        <span class="tc-tag" style="color:#33FF57;border-color:#33FF5740;background:#33FF5718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it's not deployed, it doesn't exist.</div>
-                    <div class="tc-hint" style="color:#33FF57;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_001"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_001</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">Most AI apps fail not because of bad models, but because of weak product thinking.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div></div>
-        </div>
-        
-        <div class="thought-row py-4" style="border-top:1px solid rgba(255,255,255,0.07);">
-            <div class="thought-track" style="animation:thought-ltr 26s linear infinite;">
-                <div class="thought-card" data-log="LOG_005"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_005</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">AI is easy to demo. Hard to ship reliably.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_006"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_006</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">I don't just build apps. I build systems that run them.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_007"
-                     style="box-shadow:4px 4px 0 #33FF57; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #33FF57'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #33FF57'">
-                    <div class="tc-top-bar" style="background:#33FF57;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#33FF57;">LOG_007</span>
-                        <span class="tc-tag" style="color:#33FF57;border-color:#33FF5740;background:#33FF5718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it's not deployed, it doesn't exist.</div>
-                    <div class="tc-hint" style="color:#33FF57;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_003"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_003</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">Shipping something imperfect beats designing something perfect forever.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_005"
-                     style="box-shadow:4px 4px 0 #FF2D78; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #FF2D78'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #FF2D78'">
-                    <div class="tc-top-bar" style="background:#FF2D78;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#FF2D78;">LOG_005</span>
-                        <span class="tc-tag" style="color:#FF2D78;border-color:#FF2D7840;background:#FF2D7818;">[AI]</span>
-                    </div>
-                    <div class="tc-text">AI is easy to demo. Hard to ship reliably.</div>
-                    <div class="tc-hint" style="color:#FF2D78;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_006"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_006</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">I don't just build apps. I build systems that run them.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_007"
-                     style="box-shadow:4px 4px 0 #33FF57; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #33FF57'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #33FF57'">
-                    <div class="tc-top-bar" style="background:#33FF57;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#33FF57;">LOG_007</span>
-                        <span class="tc-tag" style="color:#33FF57;border-color:#33FF5740;background:#33FF5718;">[SYSTEMS]</span>
-                    </div>
-                    <div class="tc-text">If it's not deployed, it doesn't exist.</div>
-                    <div class="tc-hint" style="color:#33FF57;">expanding log...<span class="tc-cursor">_</span></div>
-                </div>
-                <div class="thought-card" data-log="LOG_003"
-                     style="box-shadow:4px 4px 0 #F97316; border-color:rgba(255,255,255,0.12);"
-                     onmouseenter="this.style.boxShadow='2px 2px 0 #F97316'"
-                     onmouseleave="this.style.boxShadow='4px 4px 0 #F97316'">
-                    <div class="tc-top-bar" style="background:#F97316;"></div>
-                    <div class="tc-header">
-                        <span class="tc-id" style="color:#F97316;">LOG_003</span>
-                        <span class="tc-tag" style="color:#F97316;border-color:#F9731640;background:#F9731618;">[PRODUCT]</span>
-                    </div>
-                    <div class="tc-text">Shipping something imperfect beats designing something perfect forever.</div>
-                    <div class="tc-hint" style="color:#F97316;">expanding log...<span class="tc-cursor">_</span></div>
-                </div></div>
+        <!-- Single horizontal row of certification cards -->
+        <div class="cert-row py-4" style="border-top:1px solid rgba(255,255,255,0.07);">
+            <div class="cert-track" id="cert-marquee-track" style="animation:cert-scroll 45s linear infinite;">
+                <!-- Cards populated dynamically by JS on DOMContentLoaded -->
+            </div>
         </div>
 
     </section>
+
+    <!-- FULL PANEL OVERLAY -->
+    <div id="cert-panel">
+        <div id="cert-panel-box">
+            <div id="cert-panel-header">
+                <div id="cert-panel-title">
+                    <span class="h-3 w-3 bg-red-500 rounded-full border border-black"></span>
+                    <span class="h-3 w-3 bg-yellow-500 rounded-full border border-black"></span>
+                    <span class="h-3 w-3 bg-green-500 rounded-full border border-black"></span>
+                    <span class="ml-4">CERTIFICATIONS_AND_ACHIEVEMENTS.log</span>
+                </div>
+                <div id="cert-panel-controls">
+                    <button class="panel-btn" style="border-color:#33FF57;color:#33FF57;">[ FULL_RECORD ]</button>
+                    <button class="panel-btn close-btn" onclick="closeCertPanel()">[ CLOSE ]</button>
+                </div>
+            </div>
+            <div id="cert-panel-search">
+                <input type="text" id="cert-search-input" placeholder="> search records..." oninput="filterCerts()">
+            </div>
+            <div class="cert-tab-bar">
+                <button class="cert-tab active" id="tab-cert" onclick="switchTab('CERT')">[ CERTIFICATIONS ]</button>
+                <button class="cert-tab" id="tab-ach" onclick="switchTab('ACH')">[ ACHIEVEMENTS ]</button>
+            </div>
+            <div id="cert-status-area">
+                <div class="cert-system-msg" id="cert-system-status">
+                    <span id="cert-system-text">> system idle</span><span class="cert-cursor"></span>
+                </div>
+            </div>
+            <div class="cert-loader-container" id="cert-system-loader">
+                <div class="cert-loader-bar" id="cert-system-progress"></div>
+            </div>
+            <div id="cert-panel-content">
+                <div class="cert-grid" id="cert-grid">
+                    <!-- Cards populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* 
+           DATABASE_VERSION: 1.2.0
+           LAST_REFRESH: April 18, 2026
+           SYNC_STATUS: VERIFIED
+        */
+        window.CERT_DASHBOARD_VERSION = "1.2.0";
+
+        // Certification data
+        const certData = [
+            {
+                id: 'CERT_001',
+                title: 'Tech Savishkaar 4.0',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#3B82F6',
+                type: 'CERT',
+                desc: 'Participated in Tech Savishkaar 4.0, gaining exposure to technical problem-solving environments and engaging with peers in a competitive academic setting.',
+                year: '2024',
+                role: 'PARTICIPANT',
+                tech: 'Technical Event, Problem Solving, Participation, Learning Experience',
+                image: 'Assets/images/tech_saviikar.png',
+                displayType: 'TECHNICAL EVENT CERTIFICATION',
+                customPrefix: 'This record reflects participation in a college-level technical event.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> verifying participation...", delay: 800 },
+                    { text: "> record confirmed.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'Vasavi College of Engineering',
+                        platform: 'Unstop',
+                        event: 'Tech Savishkaar 4.0',
+                        record_type: 'participation'
+                    },
+                    skills: [
+                        'exposure to technical problem-solving',
+                        'understanding competitive environments',
+                        'adaptability in new challenges'
+                    ],
+                    learnings: [
+                        'experienced structured technical events',
+                        'improved ability to engage with problem statements',
+                        'gained confidence in participating in competitions'
+                    ],
+                    applied: [
+                        'increased participation in hackathons and events',
+                        'improved confidence in presenting and solving problems'
+                    ],
+                    insight: "Early participation builds confidence — consistency builds real skill."
+                }
+            },
+            {
+                id: 'CERT_002',
+                title: 'Vibe HACK — HackWithIndia',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#FF9F1C',
+                type: 'CERT',
+                desc: 'Ranked among top 1,000 teams out of 3,000 participants',
+                year: '2024',
+                role: 'PARTICIPANT',
+                tech: 'Hackathon, Problem Solving, Teamwork, Rapid Prototyping, Innovation',
+                image: 'Assets/images/vibe_hack.jpg',
+                inspectableData: {
+                    logs: {
+                        issued_by: 'HackWithIndia',
+                        event: 'Vibe HACK',
+                        record_type: 'participation',
+                        rank_status: 'top_1000'
+                    },
+                    skills: [
+                        'rapid problem-solving',
+                        'working under time constraints',
+                        'team collaboration',
+                        'idea validation and execution'
+                    ],
+                    learnings: [
+                        'learned to build solutions under strict deadlines',
+                        'improved ability to convert ideas into working prototypes',
+                        'gained experience in collaborative product development',
+                        'adapted quickly to real-world problem scenarios'
+                    ],
+                    applied: [
+                        'improved execution speed in personal projects',
+                        'applied rapid prototyping in AI-based applications',
+                        'enhanced team coordination in group builds'
+                    ],
+                    insight: "Hackathons teach execution under pressure — ideas matter less than how fast you can build and adapt."
+                }
+            },
+            {
+                id: 'CERT_003',
+                title: 'Kharagpur Data Science Hackathon',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#FF2A2A',
+                type: 'CERT',
+                desc: 'Participated in Round 1 of a national-level data science hackathon conducted by IIT Kharagpur',
+                year: '2025',
+                role: 'PARTICIPANT',
+                tech: 'Data Science, Analytics, Problem Solving, Competition, Technical Exposure',
+                image: 'Assets/images/kharagpur_hackathon.jpg.png',
+                displayType: 'TECHNICAL CERTIFICATION',
+                customPrefix: 'This record reflects participation in a national-level data science competition.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> validating participation...", delay: 800 },
+                    { text: "> record confirmed.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'IIT Kharagpur',
+                        organization: 'Kharagpur Data Analytics Group',
+                        event: 'KDSH 6.0',
+                        round: '1',
+                        record_type: 'participation'
+                    },
+                    skills: [
+                        'analytical thinking',
+                        'understanding data-driven problems',
+                        'structured problem-solving approach',
+                        'exposure to data science workflows'
+                    ],
+                    learnings: [
+                        'gained insight into how data science problems are framed',
+                        'understood importance of data interpretation and logic',
+                        'experienced competitive technical environments',
+                        'improved approach to analytical challenges'
+                    ],
+                    applied: [
+                        'used analytical thinking in project development',
+                        'improved decision-making in system design',
+                        'applied structured thinking in problem-solving'
+                    ],
+                    insight: "Data science is not just about tools — it's about understanding the problem before choosing the solution."
+                }
+            },
+            {
+                id: 'ACH_001',
+                title: 'Summer of AI Internship — VISWAM.AI',
+                status: 'COMPLETED',
+                statusColor: '#FF70A6',
+                type: 'ACH',
+                desc: 'Completed a 4-week Summer of AI program focused on understanding how intelligent systems can be applied to solve real-world problems. The experience involved learning, experimenting, and thinking through practical use cases of AI in meaningful contexts.',
+                year: '2025',
+                role: 'AI INTERN',
+                tech: 'Artificial Intelligence, Real-world Problem Solving, Machine Learning Basics, Collaboration, Applied Thinking',
+                image: 'Assets/images/viswam_ai.png',
+                interactionSteps: [
+                    { text: "> accessing internship data...", delay: 600 },
+                    { text: "> verifying program...", delay: 800 },
+                    { text: "> record confirmed.", delay: 400 }
+                ],
+                displayType: 'INTERNSHIP',
+                customPrefix: 'This record reflects hands-on experience gained through a structured AI internship.',
+                inspectableData: {
+                    logs: {
+                        issued_by: 'VISWAM.AI',
+                        verified_by: 'Swecha / IIIT Hyderabad',
+                        duration: '4 weeks',
+                        record_type: 'internship'
+                    },
+                    skills: [
+                        'breaking down real-world problems into solvable parts',
+                        'applying AI concepts in practical scenarios',
+                        'working within structured learning environments',
+                        'thinking beyond just implementation'
+                    ],
+                    learnings: [
+                        'understood how AI is used beyond theory',
+                        'learned to approach problems with a solution-first mindset',
+                        'gained exposure to building impactful systems',
+                        'improved ability to connect concepts with real applications'
+                    ],
+                    applied: [
+                        'used AI-driven thinking in personal projects',
+                        'improved approach to building scalable digital products',
+                        'applied structured problem-solving in development work'
+                    ],
+                    insight: "Learning AI is one thing — understanding where and how to apply it is what really matters."
+                }
+            },
+            {
+                id: 'CERT_004',
+                title: 'AI for India Hackathon 2025',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#FF2A2A',
+                type: 'CERT',
+                desc: 'Participated in a national-level AI hackathon focused on solving real-world challenges',
+                year: '2025',
+                role: 'PARTICIPANT',
+                tech: 'Artificial Intelligence, Problem Solving, Hackathon, Innovation, Applied Thinking',
+                image: 'Assets/images/ai_for_india_hackathon.jpg.png',
+                displayType: 'AI HACKATHON CERTIFICATION',
+                customPrefix: 'This record reflects participation in an AI-focused hackathon aimed at solving real-world problems.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> verifying participation...", delay: 800 },
+                    { text: "> record confirmed.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'ThinkMates',
+                        event: 'AI for India Hackathon',
+                        support: 'LYZR / HDAC / MATH / COIGN',
+                        record_type: 'participation'
+                    },
+                    skills: [
+                        'applying AI concepts to real-world problems',
+                        'rapid ideation and prototyping',
+                        'logical problem solving',
+                        'working in time-bound environments'
+                    ],
+                    learnings: [
+                        'gained exposure to real-world AI use cases',
+                        'improved ability to translate ideas into solutions',
+                        'understood challenges in applying AI practically',
+                        'enhanced structured thinking under constraints'
+                    ],
+                    applied: [
+                        'used AI-based thinking in personal projects',
+                        'improved approach to building intelligent systems',
+                        'applied rapid problem-solving in development'
+                    ],
+                    insight: "AI becomes meaningful only when it is applied to solve real problems — not just built for demonstration."
+                }
+            },
+            {
+                id: 'ACH_002',
+                title: 'Cybersecurity Analyst Job Simulation — TATA',
+                status: 'COMPLETED',
+                statusTag: '[ COMPLETED ]',
+                statusColor: '#3B82F6',
+                type: 'ACH',
+                desc: 'Completed a practical cybersecurity simulation focused on identity and access management (IAM), security assessment, and system integration. The experience provided insight into how security workflows operate in real environments.',
+                year: '2026',
+                role: 'CYBERSECURITY ANALYST (SIMULATION)',
+                tech: 'Cybersecurity, IAM, Security Assessment, System Integration, Risk Analysis',
+                image: 'Assets/images/tata_forge.png',
+                displayType: 'INTERNSHIP / PRACTICAL TRAINING',
+                customPrefix: 'This record reflects completion of a hands-on cybersecurity job simulation designed to mirror real-world tasks.',
+                interactionSteps: [
+                    { text: "> accessing simulation data...", delay: 600 },
+                    { text: "> validating completion...", delay: 800 },
+                    { text: "> record confirmed.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'TATA',
+                        platform: 'Forage',
+                        record_type: 'job_simulation',
+                        completion_date: 'April 15, 2026'
+                    },
+                    skills: [
+                        'identity and access management (IAM) fundamentals',
+                        'security risk assessment',
+                        'designing secure system workflows',
+                        'understanding authentication and access control'
+                    ],
+                    learnings: [
+                        'learned how IAM systems are structured and implemented',
+                        'understood how to identify and evaluate security risks',
+                        'gained exposure to real-world cybersecurity workflows',
+                        'improved awareness of system security design'
+                    ],
+                    applied: [
+                        'applied security thinking in backend system design',
+                        'improved awareness of authentication flows in apps',
+                        'incorporated better security practices in projects'
+                    ],
+                    insight: "Security is not a feature you add later — it has to be built into the system from the start."
+                }
+            },
+            {
+                id: 'ACH_003',
+                title: 'Top 10 – TechSprint Hackathon',
+                status: 'ACHIEVED',
+                statusTag: '[ TOP 10 ]',
+                statusColor: '#4285F4', // Google Blue
+                type: 'ACH',
+                desc: 'Shortlisted among top 10 teams in TechSprint Hackathon (GDG VJIT)',
+                year: '2026',
+                role: 'HACKATHON PARTICIPANT',
+                tech: 'Hackathon, Top Performer, Competitive Coding, Problem Solving',
+                image: 'Assets/images/google.jpg',
+                displayType: 'MERIT ACHIEVEMENT',
+                customPrefix: 'This record validates competitive performance in a hackathon environment.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> validating ranking...", delay: 800 },
+                    { text: "> merit confirmed...", delay: 500 },
+                    { text: "> access granted.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'GDG VJIT',
+                        event: 'TechSprint Hackathon 2025–26',
+                        result: 'Top 10 Teams',
+                        record_type: 'merit_based'
+                    },
+                    skills: [
+                        'competitive problem solving',
+                        'rapid prototyping',
+                        'solution validation under constraints',
+                        'teamwork in high-pressure environments'
+                    ],
+                    learnings: [
+                        'learned to prioritize impactful solutions under time limits',
+                        'improved decision-making during competitive builds',
+                        'gained exposure to peer-level competition'
+                    ],
+                    applied: [
+                        'future hackathons',
+                        'project building with constraints',
+                        'faster execution in real-world scenarios'
+                    ],
+                    insight: "Winning isn’t required — being among the best is proof of capability."
+                }
+            },
+            {
+                id: 'CERT_005',
+                title: 'HackShastra Hackathon',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#FF2A2A',
+                type: 'CERT',
+                desc: 'Participated in HackShastra as part of Team Build2Impact, working in a collaborative setting to approach real-world problem statements under time constraints.',
+                year: '2024',
+                role: 'HACKATHON PARTICIPANT',
+                tech: 'Hackathon, Team Collaboration, Problem Solving, Rapid Prototyping',
+                image: 'Assets/images/hackshastra.png',
+                displayType: 'HACKATHON CERTIFICATION',
+                customPrefix: 'This record reflects participation in a team-based hackathon environment.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> verifying participation...", delay: 800 },
+                    { text: "> team data validated...", delay: 500 },
+                    { text: "> access granted.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'HackShastra',
+                        event_type: 'hackathon',
+                        participation_mode: 'team_based',
+                        team: 'Build2Impact',
+                        record_type: 'participation'
+                    },
+                    skills: [
+                        'teamwork under pressure',
+                        'problem decomposition',
+                        'rapid ideation and execution',
+                        'collaborative development'
+                    ],
+                    learnings: [
+                        'experienced hackathon-style development cycles',
+                        'improved ability to work in teams',
+                        'gained exposure to time-bound problem solving'
+                    ],
+                    applied: [
+                        'stronger approach in future hackathons',
+                        'better collaboration in team projects',
+                        'improved thinking under constraints'
+                    ],
+                    insight: "Speed + clarity beats perfection in real-world building."
+                }
+            },
+            {
+                id: 'CERT_006',
+                title: 'National AI/ML Hackathon',
+                status: 'COMPLETED',
+                statusTag: '[ PARTICIPATED ]',
+                statusColor: '#3B82F6',
+                type: 'CERT',
+                desc: 'Participated in the National AI/ML Hackathon organized at IIT Hyderabad under YUVAAN, working as part of Team Build2Impact in a collaborative environment focused on solving real-world AI/ML challenges.',
+                year: '2024',
+                role: 'HACKATHON PARTICIPANT',
+                tech: 'AI/ML, Hackathon, Team Collaboration, Problem Solving',
+                image: 'Assets/images/yuuvan.png',
+                displayType: 'HACKATHON CERTIFICATION',
+                customPrefix: 'This record reflects participation in a national-level AI/ML hackathon.',
+                interactionSteps: [
+                    { text: "> accessing record...", delay: 600 },
+                    { text: "> validating participation...", delay: 800 },
+                    { text: "> verifying institution...", delay: 500 },
+                    { text: "> access granted.", delay: 400 }
+                ],
+                inspectableData: {
+                    logs: {
+                        issued_by: 'IIT Hyderabad',
+                        event: 'National AI/ML Hackathon',
+                        partner: 'Vivriti Capital',
+                        team: 'Build2Impact',
+                        record_type: 'participation'
+                    },
+                    skills: [
+                        'applied AI/ML thinking',
+                        'teamwork in technical environment',
+                        'rapid problem-solving',
+                        'collaborative ideation'
+                    ],
+                    learnings: [
+                        'exposure to national-level competition',
+                        'understanding of real-world AI problem framing',
+                        'improved team coordination under constraints'
+                    ],
+                    applied: [
+                        'stronger approach in AI-based projects',
+                        'improved system thinking in problem-solving',
+                        'better participation in hackathons'
+                    ],
+                    insight: "Real learning happens when theory meets pressure."
+                }
+            }
+        ];
+
+        let currentType = 'CERT';
+        let isSwitching = false;
+
+        function openCertPanel() {
+            document.getElementById('cert-panel').classList.add('visible');
+            switchTab('CERT', true); // Initial load
+        }
+
+        function closeCertPanel() {
+            document.getElementById('cert-panel-box').classList.add('closing');
+            setTimeout(() => {
+                document.getElementById('cert-panel').classList.remove('visible');
+                document.getElementById('cert-panel-box').classList.remove('closing');
+            }, 200);
+        }
+
+        async function switchTab(type, isInitial = false) {
+            if (isSwitching && !isInitial) return;
+            isSwitching = true;
+
+            const grid = document.getElementById('cert-grid');
+            const panelContent = document.getElementById('cert-panel-content');
+            const statusArea = document.getElementById('cert-status-area');
+            const statusText = document.getElementById('cert-system-text');
+            const loader = document.getElementById('cert-system-loader');
+            const progress = document.getElementById('cert-system-progress');
+            const cursorEl = document.querySelector('.cert-cursor');
+
+            // Update tab buttons
+            document.querySelectorAll('.cert-tab').forEach(btn => {
+                btn.classList.toggle('active', btn.id === `tab-${type.toLowerCase()}`);
+            });
+
+            currentType = type;
+
+            if (!isInitial) {
+                // Step 1: Fade out current content
+                panelContent.style.opacity = '0';
+                panelContent.style.transform = 'translateY(10px)';
+
+                // Step 2: System Message
+                if (statusArea) statusArea.style.display = 'flex';
+                if (cursorEl) cursorEl.style.display = 'inline-block';
+                statusText.textContent = '';
+                await typeText(statusText, `> switching to ${type === 'CERT' ? 'certifications' : 'achievements'}...`, 15);
+
+                // Step 3: Fast Loading Bar
+                loader.style.display = 'block';
+                progress.style.animation = 'loadBarRun 0.25s linear forwards';
+                await new Promise(r => setTimeout(r, 250));
+
+                // Clear message after switch
+                setTimeout(() => {
+                    statusText.textContent = '';
+                    if (cursorEl) cursorEl.style.display = 'none';
+                }, 400);
+
+                loader.style.display = 'none';
+                progress.style.animation = 'none';
+                void progress.offsetWidth;
+            } else {
+                statusText.textContent = '';
+                if (cursorEl) cursorEl.style.display = 'none';
+            }
+
+            // Reset search input on tab switch
+            const searchInput = document.getElementById('cert-search-input');
+            if (searchInput) searchInput.value = '';
+
+            // Step 4: Filter and Render
+            filterCerts(false);
+
+            panelContent.style.opacity = '1';
+            panelContent.style.transform = 'translateY(0)';
+
+            renderCertGrid();
+            isSwitching = false;
+        }
+
+        function typeText(el, text, speed) {
+            return new Promise(resolve => {
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        el.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        function filterCerts(shouldRender = true) {
+            const query = document.getElementById('cert-search-input').value.toLowerCase();
+
+            // Filter by type AND search query
+            filteredCerts = certData.filter(cert => {
+                const matchesType = cert.type === currentType;
+                const matchesSearch = cert.title.toLowerCase().includes(query) ||
+                    cert.tech.toLowerCase().includes(query) ||
+                    cert.id.toLowerCase().includes(query);
+                return matchesType && matchesSearch;
+            });
+
+            if (shouldRender) renderCertGrid();
+        }
+
+        function renderCertGrid() {
+            const grid = document.getElementById('cert-grid');
+            if (filteredCerts.length === 0) {
+                grid.innerHTML = '<div class="no-results">no records found in this sector...</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredCerts.map((cert, index) => `
+                <div class="cert-grid-card" onclick="triggerCardOpen('${cert.id}', this)" style="border-color:${cert.statusColor}40; --hover-color:${cert.statusColor}; animation-delay: ${index * 50}ms;">
+                    <div class="cert-grid-id" style="color:${cert.statusColor};">${cert.id}</div>
+                    <div class="cert-grid-title">${cert.title}</div>
+                    <span class="cert-grid-status" style="color:${cert.statusColor};border-color:${cert.statusColor};">${cert.statusTag || '[ ' + cert.status + ' ]'}</span>
+                    <div class="cert-grid-desc">${cert.desc}</div>
+                    <div class="cert-grid-cta">> view full record...<span class="cert-cursor"></span></div>
+                </div>
+            `).join('');
+
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('.cert-grid-card').forEach(card => {
+                    card.classList.add('animate-in');
+                });
+            }, 50);
+        }
+
+        // Global cursor ref
+        const certCursor = document.getElementById('cursor');
+
+        // ESC key to close panels
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeCertPanel();
+                closeRecord();
+            }
+        });
+
+        // Combined click handler for feedback + opening
+        async function triggerCardOpen(id, cardEl) {
+            // Immediate feedback: scale handled by CSS :active
+            // System message trigger
+            const statusArea = document.getElementById('cert-status-area');
+            const statusText = document.getElementById('cert-system-text');
+            const cursorEl = document.querySelector('.cert-cursor');
+
+            if (statusArea) statusArea.style.display = 'flex';
+            if (cursorEl) cursorEl.style.display = 'inline-block';
+
+            statusText.textContent = '';
+            // Fast typing for 'opening record...'
+            await typeText(statusText, `> opening record ${id}...`, 10);
+
+            // Interaction delay
+            setTimeout(() => {
+                openRecord(id, cardEl);
+            }, 150);
+        }
+
+        async function openRecord(id, cardEl) {
+            const cert = certData.find(c => c.id === id);
+            if (!cert) return;
+
+            const modal = document.getElementById('cert-record-modal');
+            const box = document.getElementById('cert-record-box');
+            const body = document.getElementById('cert-record-body-content');
+            const statusArea = document.getElementById('cert-status-area');
+            const statusText = document.getElementById('cert-system-text');
+            const cursorEl = document.querySelector('.cert-cursor');
+
+            // Toggle cursor theme for light background
+            if (certCursor) certCursor.classList.add('cursor-dark');
+
+            // System feedback
+            if (statusArea) statusArea.style.display = 'flex';
+            if (cursorEl) cursorEl.style.display = 'inline-block';
+
+            // Populate content
+            const imageHTML = cert.image
+                ? `<img src="${cert.image}" alt="${cert.title}" style="max-width:100%; height:auto; border:2px solid #000; box-shadow:8px 8px 0 rgba(0,0,0,0.1);" onerror="this.parentElement.innerHTML='[ IMAGE_LOAD_ERROR ]';">`
+                : `<div class="cert-image-placeholder">[ SYSTEM_IMG_STUB ]<br>DATA: ${cert.id}<br>SRC: CERT_DB_INTERNAL</div>`;
+
+            let actionAndInspectableHTML = '';
+
+            if (cert.inspectableData) {
+                actionAndInspectableHTML = `
+                    <div style="margin-top: auto;">
+                        <button class="record-action-btn" data-state="closed" onclick="toggleRecordInsights(this, '${cert.id}')">
+                            [ OPEN_RECORD ]
+                        </button>
+                        <div class="cert-system-logs" id="system-logs-container"></div>
+                        <div class="cert-inspectable-section" id="inspectable-section">
+                            <div class="cert-inspect-header">
+                                > record_insights:
+                            </div>
+                            <div class="cert-inspect-grid">
+                                <div class="cert-inspect-block">
+                                    <span class="cert-inspect-label">KEY_LEARNINGS</span>
+                                    <ul class="cert-inspect-list">
+                                        ${cert.inspectableData.learnings.map(l => `<li>${l}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div class="cert-inspect-block">
+                                    <span class="cert-inspect-label">SKILLS_EXTRACTED</span>
+                                    <ul class="cert-inspect-list">
+                                        ${cert.inspectableData.skills.map(s => `<li>${s.toUpperCase()}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                ${cert.inspectableData.applied ? `
+                                <div class="cert-inspect-block" style="grid-column: 1 / -1;">
+                                    <span class="cert-inspect-label">REAL_WORLD_APPLICATION</span>
+                                    <ul class="cert-inspect-list">
+                                        ${cert.inspectableData.applied.map(a => `<li>${a}</li>`).join('')}
+                                    </ul>
+                                </div>` : ''}
+                                <div class="cert-insight-box">
+                                    <span class="cert-inspect-label">CORE_INSIGHT</span>
+                                    <p class="cert-insight-quote">${cert.inspectableData.insight}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const tags = cert.tech.split(',').map(t => `<span class="cert-tag">${t.trim()}</span>`).join('');
+
+            body.innerHTML = `
+                <div class="cert-record-body">
+                    <div class="cert-record-image-side">
+                        <div class="cert-image-frame">
+                            ${imageHTML}
+                        </div>
+                        <div class="cert-record-meta-small">
+                            ${cert.inspectableData?.logs
+                    ? Object.entries(cert.inspectableData.logs).map(([k, v]) => `> ${k}: ${v}<br>`).join('')
+                    : `> record_status: standard<br>> data_verified: true`}
+                        </div>
+                    </div>
+                    <div class="cert-record-content-side">
+                        <h2 class="cert-record-title">${cert.title}</h2>
+                        <div class="cert-record-stats">
+                            <div class="cert-stat-item">
+                                <div class="cert-stat-label">Status</div>
+                                <div class="cert-stat-value" style="color:${cert.statusColor}">${cert.statusTag || '[ ' + cert.status + ' ]'}</div>
+                            </div>
+                            <div class="cert-stat-item">
+                                <div class="cert-stat-label">Year</div>
+                                <div class="cert-stat-value">${cert.year}</div>
+                            </div>
+                            <div class="cert-stat-item">
+                                <div class="cert-stat-label">Role</div>
+                                <div class="cert-stat-value">${cert.role}</div>
+                            </div>
+                            <div class="cert-stat-item">
+                                <div class="cert-stat-label">Type</div>
+                                <div class="cert-stat-value">${cert.displayType || (cert.type === 'ACH' ? 'ACHIEVEMENT' : 'CERTIFICATION')}</div>
+                            </div>
+                        </div>
+                        <div class="cert-record-desc">
+                            > ${cert.customPrefix || `This record validates historical achievement and skill acquisition. Data confirms competence in ${cert.tech}.`}
+                            <br><br>
+                            ${cert.desc}
+                        </div>
+                        <div class="cert-record-tags">
+                            ${tags}
+                        </div>
+                        ${actionAndInspectableHTML}
+                    </div>
+                </div>
+            `;
+
+            // Expansion animation logic
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('visible');
+                box.classList.add('glitch-reveal');
+                setTimeout(() => box.classList.remove('glitch-reveal'), 400);
+            }, 10);
+        }
+
+        async function toggleRecordInsights(btn, certId) {
+            const cert = certData.find(c => c.id === certId);
+            if (!cert) return;
+
+            const logContainer = document.getElementById('system-logs-container');
+            const insightsSection = document.getElementById('inspectable-section');
+            const imageFrame = document.querySelector('.cert-image-frame');
+            const state = btn.getAttribute('data-state');
+
+            if (state === 'closed') {
+                // --- START INSPECTION ---
+                btn.setAttribute('data-state', 'inspecting');
+                btn.classList.add('inspecting');
+                btn.textContent = '[ INSPECTING... ]';
+                logContainer.innerHTML = ''; // Clear previous logs
+
+                const steps = cert.interactionSteps || [
+                    { text: "> accessing certificate...", delay: 200 },
+                    { text: "> validating credentials...", delay: 300 },
+                    { text: "> parsing record...", delay: 250 },
+                    { text: "> extracting insights...", delay: 300 }
+                ];
+
+                for (const step of steps) {
+                    await new Promise(r => setTimeout(r, step.delay));
+                    const p = document.createElement('p');
+                    p.textContent = step.text;
+                    logContainer.appendChild(p);
+                }
+
+                // --- REVEAL INSIGHTS ---
+                insightsSection.classList.add('visible');
+                if (imageFrame) imageFrame.classList.add('highlighted');
+                btn.classList.remove('inspecting');
+                btn.classList.add('ready');
+                btn.textContent = '[ RECORD READY ]';
+                btn.setAttribute('data-state', 'open');
+
+            } else if (state === 'open') {
+                // --- COLLAPSE INSIGHTS ---
+                insightsSection.classList.remove('visible');
+                if (imageFrame) imageFrame.classList.remove('highlighted');
+                logContainer.innerHTML = '';
+
+                btn.classList.remove('ready');
+                btn.textContent = '[ OPEN_RECORD ]';
+                btn.setAttribute('data-state', 'closed');
+            }
+        }
+
+        function closeRecord() {
+            const modal = document.getElementById('cert-record-modal');
+            const statusText = document.getElementById('cert-system-text');
+            const cursorEl = document.querySelector('.cert-cursor');
+
+            // Revert cursor theme
+            if (certCursor) certCursor.classList.remove('cursor-dark');
+
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.style.display = 'none';
+
+                // Revert system message
+                if (statusText) statusText.textContent = '> system idle';
+                if (cursorEl) cursorEl.style.display = 'inline-block';
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.getElementById('cert-marquee-track');
+            if (track) {
+                const marqueeData = [...certData, ...certData];
+                track.innerHTML = marqueeData.map(cert => `
+                    <div class="cert-card" onclick="triggerCardOpen('${cert.id}', this)" style="box-shadow:4px 4px 0 ${cert.statusColor}; --hover-color:${cert.statusColor};">
+                        <div class="cert-header">
+                            <span class="cert-id" style="color:${cert.statusColor};">${cert.id}</span>
+                            <span class="cert-status" style="color:${cert.statusColor};border-color:${cert.statusColor};">${cert.statusTag || '[ ' + cert.status + ' ]'}</span>
+                        </div>
+                        <div class="cert-title">${cert.title}</div>
+                        <div class="cert-desc">${cert.desc}</div>
+                        <div class="cert-hint" style="color:${cert.statusColor};">> VIEW FULL RECORD...<span class="tc-cursor">_</span></div>
+                    </div>
+                `).join('');
+
+                // ===== DEPTH SHADOW EFFECT =====
+                const certCards = document.querySelectorAll('#cert-marquee-track .cert-card');
+                const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+                if (isFinePointer) {
+                    certCards.forEach(card => {
+                        let animationFrameId = null;
+
+                        card.addEventListener('mousemove', (e) => {
+                            cancelAnimationFrame(animationFrameId);
+                            animationFrameId = requestAnimationFrame(() => {
+                                const rect = card.getBoundingClientRect();
+                                const x = e.clientX - rect.left - rect.width / 2;
+                                const y = e.clientY - rect.top - rect.height / 2;
+
+                                const normX = x / (rect.width / 2);
+                                const normY = y / (rect.height / 2);
+
+                                const MAX_TRANSLATE = 2;
+                                const MAX_SHADOW_OFFSET = 10;
+                                const SHADOW_BLUR = 25;
+
+                                const translateX = -normX * MAX_TRANSLATE;
+                                const translateY = -normY * MAX_TRANSLATE;
+                                const shadowX = -normX * MAX_SHADOW_OFFSET;
+                                const shadowY = -normY * MAX_SHADOW_OFFSET;
+
+                                const hoverColor = card.style.getPropertyValue('--hover-color').trim();
+                                const shadowRgb = hoverColor ? hexToRgb(hoverColor) : '51, 255, 87';
+
+                                card.style.transform = `scale(1.02) translateX(${translateX}px) translateY(${translateY}px)`;
+                                card.style.boxShadow = `${shadowX}px ${shadowY}px ${SHADOW_BLUR}px rgba(${shadowRgb}, 0.25)`;
+
+                                const highlightX = e.clientX - rect.left;
+                                const highlightY = e.clientY - rect.top;
+                                card.style.background = `radial-gradient(circle at ${highlightX}px ${highlightY}px, rgba(255, 255, 255, 0.05) 0%, transparent 40%), #0f0f0f`;
+                            });
+                        });
+
+                        card.addEventListener('mouseleave', () => {
+                            cancelAnimationFrame(animationFrameId);
+                            card.style.transform = '';
+                            card.style.boxShadow = '';
+                            card.style.background = '';
+                        });
+                    });
+                }
+
+                function hexToRgb(hex) {
+                    hex = hex.replace('#', '');
+                    if (hex.length === 3) hex = hex.split('').map(char => char + char).join('');
+                    const bigint = parseInt(hex, 16);
+                    return `${(bigint >> 16) & 255},${(bigint >> 8) & 255},${bigint & 255}`;
+                }
+            }
+        });
+    </script>
 
     <section id="contact" class="py-24 px-4 max-w-5xl mx-auto">
         <div class="bg-white border-4 border-black shadow-hard-xl p-8 md:p-12 relative reveal mt-12">
@@ -1646,6 +3516,9 @@
         // Add hover effect to cursor
         hoverElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
+                // If it's a themed dark cursor (e.g. over light panels), don't overwrite with difference mode
+                if (cursor.classList.contains('cursor-dark')) return;
+
                 cursor.style.width = '60px';
                 cursor.style.height = '60px';
                 cursor.style.backgroundColor = '#FBFF48'; // Neo Yellow
@@ -1653,6 +3526,8 @@
                 cursor.style.border = '2px solid black';
             });
             el.addEventListener('mouseleave', () => {
+                if (cursor.classList.contains('cursor-dark')) return;
+
                 cursor.style.width = '24px';
                 cursor.style.height = '24px';
                 cursor.style.backgroundColor = '#fff';
@@ -1804,204 +3679,234 @@
 
     <!-- ===== SPLASH ORCHESTRATOR ===== -->
     <script>
-    (function () {
-        var splash   = document.getElementById('splash-screen');
-        var fill     = document.getElementById('splash-name-fill');
-        var label    = document.getElementById('splash-label');
-        function after(ms, fn) { setTimeout(fn, ms); }
-        function addClass(el, cls) { el.classList.add(cls); }
-        document.body.style.overflow = 'hidden';
-        after(300, function () {
-            fill.style.animation = 'splash-fill-lr 0.9s cubic-bezier(0.76,0,0.24,1) forwards';
-        });
-        after(1350, function () {
-            fill.style.animation += ', splash-pop 0.35s cubic-bezier(0.36,0.07,0.19,0.97) 0.9s both';
-        });
-        after(1400, function () {
-            label.style.animation = 'splash-label-in 0.4s cubic-bezier(0.25,1,0.5,1) forwards';
-        });
-        after(2000, function () {
-            addClass(splash, 'do-exit');
-        });
-        after(2550, function () {
-            splash.remove();
-            document.body.style.overflow = '';
-        });
-    })();
+        (function () {
+            var splash = document.getElementById('splash-screen');
+            var fill = document.getElementById('splash-name-fill');
+            var label = document.getElementById('splash-label');
+            function after(ms, fn) { setTimeout(fn, ms); }
+            function addClass(el, cls) { el.classList.add(cls); }
+            document.body.style.overflow = 'hidden';
+            after(300, function () {
+                fill.style.animation = 'splash-fill-lr 0.9s cubic-bezier(0.76,0,0.24,1) forwards';
+            });
+            after(1350, function () {
+                fill.style.animation += ', splash-pop 0.35s cubic-bezier(0.36,0.07,0.19,0.97) 0.9s both';
+            });
+            after(1400, function () {
+                label.style.animation = 'splash-label-in 0.4s cubic-bezier(0.25,1,0.5,1) forwards';
+            });
+            after(2000, function () {
+                addClass(splash, 'do-exit');
+            });
+            after(2550, function () {
+                splash.remove();
+                document.body.style.overflow = '';
+            });
+        })();
     </script>
     <!-- ===== END SPLASH ORCHESTRATOR ===== -->
 
     <!-- ===== DEV MODE JS ===== -->
     <script>
-    (function () {
-        var backdrop    = document.getElementById('dev-backdrop');
-        var confirm_    = document.getElementById('dev-confirm');
-        var confirmBox  = document.getElementById('dev-confirm-box');
-        var consoleWrap = document.getElementById('dev-console');
-        var consoleBox  = document.getElementById('dev-console-box');
-        var output      = document.getElementById('dev-output');
-        var logo        = document.getElementById('dev-logo');
-        var btnYes      = document.getElementById('dev-yes');
-        var btnNo       = document.getElementById('dev-no');
-        var btnExit     = document.getElementById('dev-exit-btn');
-        var cmdBtns     = document.querySelectorAll('.dev-cmd-btn');
-        var isOpen = false, idleTimer = null, clickCount = 0, clickTimer = null;
-        function show(el) { el.classList.add('visible'); }
-        function hide(el) { el.classList.remove('visible'); }
-        function addLine(html) {
-            var p = document.createElement('p'); p.innerHTML = html;
-            output.appendChild(p); output.scrollTop = output.scrollHeight;
-        }
-        function typeLines(lines, done) {
-            var i = 0;
-            function next() {
-                if (i >= lines.length) { if (done) done(); return; }
-                var l = lines[i++]; addLine(l.text); setTimeout(next, l.pause || 50);
-            } next();
-        }
-        function addCursor() {
-            var p = document.createElement('p');
-            p.className = 'dev-line-prompt dev-blink-cursor'; p.id = 'dev-cursor-line'; p.innerHTML = '&#10095; ';
-            output.appendChild(p); output.scrollTop = output.scrollHeight;
-        }
-        function removeCursor() { var c = document.getElementById('dev-cursor-line'); if (c) c.remove(); }
-        function resetIdle() {
-            clearTimeout(idleTimer);
-            idleTimer = setTimeout(function () {
-                if (isOpen) { removeCursor(); addLine('<span class="dev-line-out">awaiting input...</span>'); addCursor(); }
-            }, 3500);
-        }
-        if (logo) logo.addEventListener('click', function (e) {
-            e.preventDefault(); if (isOpen) return;
-            show(backdrop); show(confirm_);
-            confirmBox.classList.remove('jitter'); void confirmBox.offsetWidth; confirmBox.classList.add('jitter');
-        });
-        btnNo.addEventListener('mousemove', function (e) {
-            var r = btnNo.getBoundingClientRect();
-            btnNo.style.transform = 'translate('+(-( e.clientX-r.left-r.width/2)*0.4)+'px,'+(-(e.clientY-r.top-r.height/2)*0.4)+'px) translate(2px,2px)';
-        });
-        btnNo.addEventListener('mouseleave', function () { btnNo.style.transform = ''; });
-        btnNo.addEventListener('click', function () { hide(backdrop); hide(confirm_); });
-        backdrop.addEventListener('click', function () { if (!isOpen) { hide(backdrop); hide(confirm_); } });
-        btnYes.addEventListener('click', function () {
-            hide(confirm_);
-            document.body.classList.add('glitch-flash');
-            setTimeout(function () { document.body.classList.remove('glitch-flash'); }, 160);
-            setTimeout(function () {
-                isOpen = true; show(consoleWrap); output.innerHTML = '';
-                typeLines([
-                    {text:'<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">dev_mode --active</span>', pause:60},
-                    {text:'<span class="dev-line-out">welcome, user.</span>', pause:60},
-                    {text:'<span class="dev-line-out">try commands below.</span>', pause:80},
-                    {text:'', pause:0}
-                ], function () { addCursor(); resetIdle(); });
-            }, 120);
-        });
-        function closeConsole() {
-            isOpen = false; clearTimeout(idleTimer); removeCursor();
-            addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">exit</span>');
-            addLine('<span class="dev-line-out">Closing dev mode...</span>');
-            setTimeout(function () {
-                consoleBox.classList.add('closing');
-                setTimeout(function () {
-                    hide(consoleWrap); hide(backdrop);
-                    consoleBox.classList.remove('closing');
-                    void consoleBox.offsetWidth;
-                }, 220);
-            }, 300);
-        }
-        btnExit.addEventListener('click', closeConsole);
-        var commands = {
-            whoami: function () {
-                typeLines([
-                    {text:'<span class="dev-line-out">Jeevan</span>',pause:40},
-                    {text:'<span class="dev-line-out">AI Product Engineer</span>',pause:40},
-                    {text:'<span class="dev-line-out">Builder of scalable, real-world systems.</span>',pause:60},
-                    {text:'', pause:30},
-                    {text:'<span class="dev-line-key">STATUS:</span> <span class="dev-line-out">building</span>',pause:40},
-                    {text:'<span class="dev-line-key">MODE:</span> <span class="dev-line-out">focused</span>',pause:0}
-                ], function () { addCursor(); resetIdle(); });
-            },
-            skills: function () {
-                typeLines([
-                    {text:'<span class="dev-line-out">React &bull; Node.js &bull; Python &bull; AI/ML</span>',pause:40},
-                    {text:'<span class="dev-line-out">APIs &bull; WebRTC &bull; PostgreSQL &bull; MongoDB</span>',pause:40},
-                    {text:'<span class="dev-line-out">Docker &bull; Git &bull; Linux &bull; Systems Design</span>',pause:0}
-                ], function () { addCursor(); resetIdle(); });
-            },
-            projects: function () {
-                addLine('<span class="dev-line-out">Opening deployed systems...</span>');
-                setTimeout(function () {
-                    closeConsole();
-                    setTimeout(function () { var el = document.getElementById('projects'); if (el) el.scrollIntoView({behavior:'smooth'}); }, 250);
-                }, 600);
-            },
-            contact: function () {
-                typeLines([
-                    {text:'<span class="dev-line-key">EMAIL:</span> <span class="dev-line-out"><a href="mailto:jeevan.charu06@gmail.com" style="color:#FBFF48;text-decoration:underline;">jeevan.charu06@gmail.com</a></span>',pause:40},
-                    {text:'<span class="dev-line-key">STATUS:</span> <span class="dev-line-out">Available for opportunities</span>',pause:0}
-                ], function () { addCursor(); resetIdle(); });
-            },
-            exit: closeConsole
-        };
-        cmdBtns.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var cmd = btn.getAttribute('data-cmd');
-                removeCursor(); resetIdle();
-                clickCount++; clearTimeout(clickTimer);
-                clickTimer = setTimeout(function () { clickCount = 0; }, 800);
-                if (clickCount >= 4) {
-                    clickCount = 0;
-                    addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + cmd + '</span>');
-                    addLine('<span class="dev-line-err">slow down, system processing...</span>');
-                    addCursor(); return;
-                }
-                if (!commands[cmd]) {
-                    addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + cmd + '</span>');
-                    addLine('<span class="dev-line-err">invalid command</span>'); addCursor(); return;
-                }
-                if (cmd !== 'exit') addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + cmd + '</span>');
-                commands[cmd]();
+        (function () {
+            var backdrop = document.getElementById('dev-backdrop');
+            var confirm_ = document.getElementById('dev-confirm');
+            var confirmBox = document.getElementById('dev-confirm-box');
+            var consoleWrap = document.getElementById('dev-console');
+            var consoleBox = document.getElementById('dev-console-box');
+            var output = document.getElementById('dev-output');
+            var logo = document.getElementById('dev-logo');
+            var btnYes = document.getElementById('dev-yes');
+            var btnNo = document.getElementById('dev-no');
+            var btnExit = document.getElementById('dev-exit-btn');
+            var cmdBtns = document.querySelectorAll('.dev-cmd-btn');
+            var isOpen = false, idleTimer = null, clickCount = 0, clickTimer = null;
+            function show(el) { el.classList.add('visible'); }
+            function hide(el) { el.classList.remove('visible'); }
+            function addLine(html) {
+                var p = document.createElement('p'); p.innerHTML = html;
+                output.appendChild(p); output.scrollTop = output.scrollHeight;
+            }
+            function typeLines(lines, done) {
+                var i = 0;
+                function next() {
+                    if (i >= lines.length) { if (done) done(); return; }
+                    var l = lines[i++]; addLine(l.text); setTimeout(next, l.pause || 50);
+                } next();
+            }
+            function addCursor() {
+                var p = document.createElement('p');
+                p.className = 'dev-line-prompt dev-blink-cursor'; p.id = 'dev-cursor-line'; p.innerHTML = '&#10095; ';
+                output.appendChild(p); output.scrollTop = output.scrollHeight;
+            }
+            function removeCursor() { var c = document.getElementById('dev-cursor-line'); if (c) c.remove(); }
+            function resetIdle() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(function () {
+                    if (isOpen) { removeCursor(); addLine('<span class="dev-line-out">awaiting input...</span>'); addCursor(); }
+                }, 3500);
+            }
+            if (logo) logo.addEventListener('click', function (e) {
+                e.preventDefault(); if (isOpen) return;
+                show(backdrop); show(confirm_);
+                confirmBox.classList.remove('jitter'); void confirmBox.offsetWidth; confirmBox.classList.add('jitter');
             });
-        });
-    })();
+            btnNo.addEventListener('mousemove', function (e) {
+                var r = btnNo.getBoundingClientRect();
+                btnNo.style.transform = 'translate(' + (-(e.clientX - r.left - r.width / 2) * 0.4) + 'px,' + (-(e.clientY - r.top - r.height / 2) * 0.4) + 'px) translate(2px,2px)';
+            });
+            btnNo.addEventListener('mouseleave', function () { btnNo.style.transform = ''; });
+            btnNo.addEventListener('click', function () { hide(backdrop); hide(confirm_); });
+            backdrop.addEventListener('click', function () { if (!isOpen) { hide(backdrop); hide(confirm_); } });
+            btnYes.addEventListener('click', function () {
+                hide(confirm_);
+                document.body.classList.add('glitch-flash');
+                setTimeout(function () { document.body.classList.remove('glitch-flash'); }, 160);
+                setTimeout(function () {
+                    isOpen = true; show(consoleWrap); output.innerHTML = '';
+                    typeLines([
+                        { text: '<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">dev_mode --active</span>', pause: 60 },
+                        { text: '<span class="dev-line-out">welcome, user.</span>', pause: 60 },
+                        { text: '<span class="dev-line-out">try commands below.</span>', pause: 80 },
+                        { text: '', pause: 0 }
+                    ], function () { addCursor(); resetIdle(); });
+                }, 120);
+            });
+            function closeConsole() {
+                isOpen = false; clearTimeout(idleTimer); removeCursor();
+                addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">exit</span>');
+                addLine('<span class="dev-line-out">Closing dev mode...</span>');
+                setTimeout(function () {
+                    consoleBox.classList.add('closing');
+                    setTimeout(function () {
+                        hide(consoleWrap); hide(backdrop);
+                        consoleBox.classList.remove('closing');
+                        void consoleBox.offsetWidth;
+                    }, 220);
+                }, 300);
+            }
+            btnExit.addEventListener('click', closeConsole);
+            var commands = {
+                whoami: function () {
+                    typeLines([
+                        { text: '<span class="dev-line-out">Jeevan</span>', pause: 40 },
+                        { text: '<span class="dev-line-out">AI Product Engineer</span>', pause: 40 },
+                        { text: '<span class="dev-line-out">Builder of scalable, real-world systems.</span>', pause: 60 },
+                        { text: '', pause: 30 },
+                        { text: '<span class="dev-line-key">STATUS:</span> <span class="dev-line-out">building</span>', pause: 40 },
+                        { text: '<span class="dev-line-key">MODE:</span> <span class="dev-line-out">focused</span>', pause: 0 }
+                    ], function () { addCursor(); resetIdle(); });
+                },
+                skills: function () {
+                    typeLines([
+                        { text: '<span class="dev-line-out">React &bull; Node.js &bull; Python &bull; AI/ML</span>', pause: 40 },
+                        { text: '<span class="dev-line-out">APIs &bull; WebRTC &bull; PostgreSQL &bull; MongoDB</span>', pause: 40 },
+                        { text: '<span class="dev-line-out">Docker &bull; Git &bull; Linux &bull; Systems Design</span>', pause: 0 }
+                    ], function () { addCursor(); resetIdle(); });
+                },
+                projects: function () {
+                    addLine('<span class="dev-line-out">Opening deployed systems...</span>');
+                    setTimeout(function () {
+                        closeConsole();
+                        setTimeout(function () { var el = document.getElementById('projects'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 250);
+                    }, 600);
+                },
+                contact: function () {
+                    typeLines([
+                        { text: '<span class="dev-line-key">EMAIL:</span> <span class="dev-line-out"><a href="mailto:jeevan.charu06@gmail.com" style="color:#FBFF48;text-decoration:underline;">jeevan.charu06@gmail.com</a></span>', pause: 40 },
+                        { text: '<span class="dev-line-key">STATUS:</span> <span class="dev-line-out">Available for opportunities</span>', pause: 0 }
+                    ], function () { addCursor(); resetIdle(); });
+                },
+                exit: closeConsole,
+                credentials: function () {
+                    addLine('<span class="dev-line-out">Accessing credentials records...</span>');
+                    setTimeout(function () {
+                        closeConsole();
+                        setTimeout(function () {
+                            openCertPanel();
+                        }, 250);
+                    }, 600);
+                },
+                certifications: function () {
+                    addLine('<span class="dev-line-out">Accessing certification sector...</span>');
+                    setTimeout(function () {
+                        closeConsole();
+                        setTimeout(function () {
+                            openCertPanel();
+                            setTimeout(() => switchTab('CERT'), 500);
+                        }, 250);
+                    }, 600);
+                },
+                achievements: function () {
+                    addLine('<span class="dev-line-out">Accessing achievement sector...</span>');
+                    setTimeout(function () {
+                        closeConsole();
+                        setTimeout(function () {
+                            openCertPanel();
+                            setTimeout(() => switchTab('ACH'), 500);
+                        }, 250);
+                    }, 600);
+                },
+                open: function (id) {
+                    if (!id) {
+                        addLine('<span class="dev-line-err">usage: open [record_id]</span>');
+                        addCursor(); resetIdle();
+                        return;
+                    }
+                    const certId = id.toUpperCase();
+                    addLine(`<span class="dev-line-out">Opening record ${certId}...</span>`);
+                    setTimeout(function () {
+                        closeConsole();
+                        setTimeout(function () {
+                            openCertPanel();
+                            setTimeout(() => openRecord(certId), 500);
+                        }, 250);
+                    }, 600);
+                }
+            };
+            cmdBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var fullCmd = btn.getAttribute('data-cmd');
+                    removeCursor(); resetIdle();
+
+                    // Parser for commands with arguments
+                    var parts = fullCmd.split(' ');
+                    var cmd = parts[0];
+                    var arg = parts[1] || null;
+
+                    clickCount++; clearTimeout(clickTimer);
+                    clickTimer = setTimeout(function () { clickCount = 0; }, 800);
+                    if (clickCount >= 4) {
+                        clickCount = 0;
+                        addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + fullCmd + '</span>');
+                        addLine('<span class="dev-line-err">slow down, system processing...</span>');
+                        addCursor(); return;
+                    }
+                    if (!commands[cmd]) {
+                        addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + fullCmd + '</span>');
+                        addLine('<span class="dev-line-err">invalid command</span>'); addCursor(); return;
+                    }
+                    if (cmd !== 'exit') addLine('<span class="dev-line-prompt">&#10095; </span><span class="dev-line-cmd">' + fullCmd + '</span>');
+                    commands[cmd](arg);
+                });
+            });
+        })();
     </script>
     <!-- ===== END DEV MODE JS ===== -->
-
-    <!-- ===== LOG CARD JS ===== -->
-    <script>
-    (function () {
-        var LOG_CONTENT = {
-            'LOG_001': "Most AI apps fail not because of bad models, but because of weak product thinking.",
-            'LOG_002': "If it doesn't work in real-time, it's not ready for users.",
-            'LOG_003': "Shipping something imperfect beats designing something perfect forever.",
-            'LOG_004': "Latency is a UX problem, not just a backend problem.",
-            'LOG_005': "AI is easy to demo. Hard to ship reliably.",
-            'LOG_006': "I don't just build apps. I build systems that run them.",
-            'LOG_007': "If it's not deployed, it doesn't exist."
-        };
-        // Create overlay dynamically
-        var overlay = document.createElement('div');
-        overlay.id = 'log-expand-overlay';
-        overlay.style.cssText = 'display:none;position:fixed;inset:0;z-index:8000;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);';
-        overlay.innerHTML = '<div style="background:#0a0a0a;border:4px solid rgba(255,255,255,0.15);padding:40px 48px;min-width:320px;max-width:560px;box-shadow:8px 8px 0 #33FF57;font-family:JetBrains Mono,monospace;">'
-            + '<div id="log-expand-label" style="color:#33FF57;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;"></div>'
-            + '<p id="log-expand-text" style="color:rgba(255,255,255,0.9);font-size:1.1rem;font-weight:700;line-height:1.6;"></p>'
-            + '<button onclick="document.getElementById('log-expand-overlay').style.display='none'" style="margin-top:24px;font-family:JetBrains Mono,monospace;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);padding:6px 18px;background:transparent;cursor:pointer;letter-spacing:0.1em;">[ CLOSE ]</button>'
-            + '</div>';
-        document.body.appendChild(overlay);
-        overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.style.display = 'none'; });
-        document.querySelectorAll('.thought-card').forEach(function (card) {
-            card.addEventListener('click', function () {
-                var id = card.getAttribute('data-log');
-                document.getElementById('log-expand-label').textContent = 'reading ' + id + '...';
-                document.getElementById('log-expand-text').textContent = LOG_CONTENT[id] || '';
-                overlay.style.display = 'flex';
-            });
-        });
-    })();
-    </script>
-    <!-- ===== END LOG CARD JS ===== -->
+    <!-- ===== CERT RECORD MODAL ===== -->
+    <div id="cert-record-modal" class="cert-record-overlay">
+        <div id="cert-record-box" class="cert-record-box">
+            <div class="cert-record-header">
+                <div class="cert-record-header-title">
+                    <span class="cert-icon">&#128196;</span> [ FULL_RECORD ]
+                </div>
+                <button class="cert-record-close" onclick="closeRecord()">[ CLOSE ]</button>
+            </div>
+            <div id="cert-record-body-content">
+                <!-- Data injected by JS -->
+            </div>
+        </div>
+    </div>
 </body>
 
 

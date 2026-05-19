@@ -3917,6 +3917,132 @@
             ingestLinkedInPayload(demoPayload);
         }
 
+        function openLinkedInExperience() {
+            const linkedInProfileUrl = "https://www.linkedin.com/in/jeevan-charugundla/";
+            const logBox = document.getElementById("root-sequence-log");
+            if (logBox) {
+                logBox.innerHTML = "<div>redirecting_to_linkedin...</div>";
+                logBox.classList.add("visible");
+                setTimeout(() => {
+                    logBox.innerHTML = "<div>external_profile_opened.</div>";
+                }, 220);
+                setTimeout(() => logBox.classList.remove("visible"), 1200);
+            }
+            const newTab = window.open(linkedInProfileUrl, "_blank", "noopener,noreferrer");
+            if (!newTab) {
+                window.location.href = linkedInProfileUrl;
+            }
+        }
+
+        function renderExperienceLogCards() {
+            const section = document.getElementById("experience");
+            if (!section) return;
+            const entries = [
+                {
+                    role: "APP DEVELOPER",
+                    time: "NOV 2025 - PRESENT",
+                    company: "@ WORD WAVE (STARTUP)",
+                    bullets: [
+                        "Contributed to frontend development of cross-platform mobile apps using Flutter",
+                        "Built AI-powered learning platform with unified dashboard and analytics",
+                        "Implemented personalized AI features and performance optimizations",
+                        "Optimized responsiveness across devices",
+                        "Collaborated using Git and modern development workflows"
+                    ]
+                },
+                {
+                    role: "JUNIOR APPLICATION DEVELOPER",
+                    time: "FEB 2026 - PRESENT",
+                    company: "@ TECHITY SOLUTIONS PRIVATE LIMITED",
+                    bullets: [
+                        "Building SikhoEasy, an AI-powered EdTech platform for adaptive learning",
+                        "Developing AI Tutor and Smart Q&A systems",
+                        "Working on real-time backend APIs and scalable architecture",
+                        "Creating responsive UI/UX systems using Flutter",
+                        "Implementing gamification and personalized learning experiences"
+                    ]
+                },
+                {
+                    role: "ARTIFICIAL INTELLIGENCE INTERN",
+                    time: "APR 2026 - MAY 2026",
+                    company: "@ PINNACLE LABS",
+                    bullets: [
+                        "Worked on AI-focused development workflows and implementation systems",
+                        "Explored practical AI problem-solving approaches",
+                        "Collaborated on structured software development tasks",
+                        "Improved logical implementation and technical thinking",
+                        "Gained real-world AI development exposure"
+                    ]
+                },
+                {
+                    role: "DATA ANALYST INTERN",
+                    time: "APR 2026",
+                    company: "@ BLUESTOCK FINTECH",
+                    bullets: [
+                        "Worked on data analysis and reporting workflows",
+                        "Created structured analytical dashboards",
+                        "Explored data visualization and interpretation techniques",
+                        "Assisted in extracting business insights from datasets",
+                        "Improved analytical problem-solving skills"
+                    ]
+                },
+                {
+                    role: "FULL STACK DEVELOPMENT INTERN",
+                    time: "JAN 2026 - FEB 2026",
+                    company: "@ UNICONVERGE TECHNOLOGIES",
+                    bullets: [
+                        "Worked on frontend and backend development systems",
+                        "Implemented API integration workflows",
+                        "Built full stack application features",
+                        "Learned scalable engineering practices",
+                        "Collaborated in real-world project environments"
+                    ]
+                },
+                {
+                    role: "WEB DEVELOPMENT INTERN",
+                    time: "OCT 2025 - DEC 2025",
+                    company: "@ SKILLCRAFT TECHNOLOGY",
+                    bullets: [
+                        "Worked on responsive frontend development systems",
+                        "Built structured UI layouts and workflows",
+                        "Improved debugging and implementation skills",
+                        "Learned software engineering best practices",
+                        "Collaborated on development-oriented tasks"
+                    ]
+                }
+            ];
+
+            section.innerHTML = `
+                <h2 class="text-5xl md:text-8xl font-black uppercase mb-12 tracking-tighter text-center">
+                    EXPERIENCE<span class="text-neo-red">_LOG.sys</span>
+                </h2>
+                <div class="relative max-w-6xl mx-auto">
+                    <div class="absolute left-[19px] top-0 bottom-0 w-[4px] bg-black hidden md:block"></div>
+                    <div class="space-y-6">
+                        ${entries.map(item => `
+                            <div class="reveal active relative md:pl-20">
+                                <div class="hidden md:block absolute left-0 top-5 w-10 h-10 border-4 border-black bg-neo-yellow"></div>
+                                <article class="h-full bg-[#F6F6F6] border-4 border-black p-6 shadow-hard flex flex-col min-h-[320px]">
+                                    <div class="flex justify-between items-start gap-3">
+                                        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight">${item.role}</h3>
+                                        <span class="font-mono text-xs md:text-sm font-bold bg-black text-white px-3 py-1 border-2 border-black">${item.time}</span>
+                                    </div>
+                                    <div class="border-b-2 border-black/20 mt-4 mb-4"></div>
+                                    <p class="font-mono text-sm md:text-base font-bold text-neo-red mb-3">${item.company}</p>
+                                    <ul class="font-mono text-sm md:text-[15px] text-black/80 space-y-2 leading-relaxed flex-1">
+                                        ${item.bullets.map(b => `<li>• ${b}</li>`).join("")}
+                                    </ul>
+                                    <div class="flex justify-end mt-6">
+                                        <button onclick="openLinkedInExperience()" class="font-mono text-xs md:text-sm font-bold bg-black text-white border-2 border-black px-4 py-2 shadow-hard-sm transition-all hover:-translate-y-[1px] hover:shadow-hard">[ VIEW ON LINKEDIN ↗ ]</button>
+                                    </div>
+                                </article>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
         function filterCerts() {
             renderRecordList();
         }
@@ -3927,6 +4053,7 @@
             document.body.classList.remove("root-admin-mode");
             const panel = document.getElementById("cert-panel");
             if (panel) panel.classList.remove("visible");
+            renderExperienceLogCards();
             initializeRecords();
             loadLinkedInSyncState();
             renderPublicCards();

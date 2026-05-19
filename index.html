@@ -109,7 +109,7 @@
     <style>
         /* Base Styles */
         body {
-            cursor: none;
+            cursor: auto;
             /* We use a custom cursor */
             background-color: #FFFDF5;
             background-image:
@@ -117,6 +117,22 @@
                 linear-gradient(to right, #e5e5e5 1px, transparent 1px),
                 linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
             background-size: 40px 40px, 100px 100px, 100px 100px;
+        }
+
+        @media (pointer: fine) {
+            body {
+                cursor: none;
+            }
+
+            #cursor {
+                display: block !important;
+            }
+        }
+
+        @media (pointer: coarse) {
+            #cursor {
+                display: none !important;
+            }
         }
 
         /* Custom Cursor */
@@ -1728,6 +1744,112 @@
             background: #33FF57;
             animation: loading-bar 1.5s ease-in-out infinite;
         }
+
+        /* ===== ROOT ADMIN ACCESS ===== */
+        #root-sequence-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9800;
+            pointer-events: none;
+            opacity: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(51, 255, 87, 0.08) 0 2px, rgba(0, 0, 0, 0) 2px 6px),
+                radial-gradient(circle at center, rgba(51, 255, 87, 0.1), rgba(0, 0, 0, 0.6));
+            transition: opacity 0.35s ease;
+        }
+
+        #root-sequence-overlay.active {
+            opacity: 1;
+            animation: rootGridDistort 0.5s ease;
+        }
+
+        @keyframes rootGridDistort {
+            0% { transform: scale(1); filter: hue-rotate(0deg); }
+            50% { transform: scale(1.01) skewX(0.25deg); filter: hue-rotate(10deg); }
+            100% { transform: scale(1); filter: hue-rotate(0deg); }
+        }
+
+        #root-sequence-log {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 9900;
+            max-width: min(520px, 90vw);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: #79ff8f;
+            background: rgba(0, 0, 0, 0.86);
+            border: 2px solid rgba(51, 255, 87, 0.6);
+            padding: 14px 16px;
+            box-shadow: 0 0 26px rgba(51, 255, 87, 0.2);
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+        }
+
+        #root-sequence-log.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .root-admin-mode #cert-panel,
+        .root-admin-mode #cert-panel.visible {
+            z-index: 9950;
+        }
+
+        .admin-shell {
+            height: min(88vh, 860px);
+            background: #050805;
+            color: #d4ffd8;
+            border: 2px solid #1f8a3a;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .admin-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(51, 255, 87, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 255, 87, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .admin-sidebar-btn.active { background: rgba(51, 255, 87, 0.2); border-color: #79ff8f; }
+        .admin-record-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .admin-record-card:hover { transform: translateY(-2px); box-shadow: 0 0 18px rgba(51, 255, 87, 0.25); }
+        .admin-action-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            padding: 10px 14px;
+            border-width: 2px;
+            min-width: 108px;
+            text-align: center;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        #admin-record-modal input, #admin-record-modal textarea, #admin-record-modal select {
+            background: #0b0f0b; color: #d4ffd8; border: 1px solid #1f8a3a; outline: none;
+        }
+        #admin-record-modal input:focus, #admin-record-modal textarea:focus, #admin-record-modal select:focus {
+            border-color: #79ff8f;
+        }
+
+        @media (max-width: 920px) {
+            .admin-shell { grid-template-columns: 1fr; }
+            #admin-sidebar { display: none; }
+        }
     </style>
 </head>
 
@@ -1758,13 +1880,15 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <div id="cursor" class="w-6 h-6 bg-white rounded-full border-2 border-black hidden lg:block"></div>
+    <div id="root-sequence-overlay"></div>
+    <div id="root-sequence-log"></div>
 
     <div class="fixed top-0 left-0 h-2 bg-neo-green z-[60] border-b-2 border-black" id="progressBar" style="width: 0%">
     </div>
 
     <nav class="fixed top-0 w-full z-50 px-4 py-4 pointer-events-none">
         <div class="max-w-7xl mx-auto flex justify-between items-center pointer-events-auto">
-            <a href="#" id="dev-logo"
+            <a href="#" id="site-logo"
                 class="bg-neo-white border-2 border-black px-4 py-1 text-2xl font-black shadow-hard hover:bg-neo-yellow transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-hover">
                 JEEVAN.dev
             </a>
@@ -2537,14 +2661,26 @@
     </div>
 
     <script>
-        /* 
-           DATABASE_VERSION: 1.2.0
-           LAST_REFRESH: April 18, 2026
-           SYNC_STATUS: VERIFIED
+        /*
+           DATABASE_VERSION: 2.0.0
+           LAST_REFRESH: May 20, 2026
+           SYNC_STATUS: ROOT_READY
         */
-        window.CERT_DASHBOARD_VERSION = "1.2.0";
+        window.CERT_DASHBOARD_VERSION = "2.0.0";
+        const ROOT_SECRET_SEQUENCE = "110406";
+        const ROOT_SEQUENCE_TIMEOUT_MS = 3000;
+        const ROOT_SEQUENCE_COOLDOWN_MS = 4500;
+        const ROOT_STORAGE_KEY = "jeevan_root_records_v2";
 
-        // Certification data
+        const colorMap = {
+            green: "#33FF57",
+            purple: "#A855F7",
+            orange: "#FF9F1C",
+            blue: "#3B82F6",
+            red: "#FF2A2A",
+            pink: "#FF70A6"
+        };
+
         const certData = [
             {
                 id: 'CERT_001',
@@ -2954,434 +3090,557 @@
             }
         ];
 
-        let currentType = 'CERT';
-        let isSwitching = false;
+        let records = [];
+        let adminUnlocked = false;
+        let currentCategory = "CERT";
+        let currentFilter = "all";
+        let sequenceBuffer = "";
+        let sequenceLastKeyAt = 0;
+        let activationCooldownUntil = 0;
+        let rootInputZoneArmed = false;
+        let rootInputZoneArmExpiresAt = 0;
+        let editingRecordId = null;
+
+        function normalizeTypeLabel(type) {
+            return type === "CERT" ? "CERTIFICATION" : type === "ACH" ? "ACHIEVEMENT" : type === "INT" ? "INTERNSHIP" : "PROJECT";
+        }
+
+        function safeSplit(value) {
+            return (value || "").split(",").map(v => v.trim()).filter(Boolean);
+        }
+
+        function extractSkillData(record) {
+            const skills = safeSplit(record.tech);
+            return {
+                skills: skills.length ? skills : ["system_design", "execution", "delivery"],
+                learnings: [record.desc || "Delivered a practical result under constraints."],
+                applied: [record.role || "Cross-functional implementation"],
+                insight: record.customPrefix || "Consistent shipping compounds into strong proof of work."
+            };
+        }
+
+        function hydrateRecord(raw) {
+            const type = raw.type || "CERT";
+            const color = raw.statusColor || colorMap.green;
+            return {
+                ...raw,
+                type,
+                status: raw.status || "COMPLETED",
+                statusTag: raw.statusTag || `[ ${raw.status || "COMPLETED"} ]`,
+                statusColor: color,
+                year: raw.year || new Date().getFullYear().toString(),
+                role: raw.role || "BUILDER",
+                tech: raw.tech || "",
+                image: raw.image || "",
+                desc: raw.desc || "",
+                displayType: raw.displayType || normalizeTypeLabel(type),
+                customPrefix: raw.customPrefix || "This record is managed through ROOT_NODE dynamic publishing.",
+                verificationLink: raw.verificationLink || "",
+                externalLink: raw.externalLink || "",
+                organization: raw.organization || "",
+                detailedDescription: raw.detailedDescription || raw.desc || "",
+                media: raw.media || {},
+                inspectableData: raw.inspectableData || extractSkillData(raw)
+            };
+        }
+
+        function initializeRecords() {
+            const saved = localStorage.getItem(ROOT_STORAGE_KEY);
+            if (saved) {
+                try {
+                    records = JSON.parse(saved).map(hydrateRecord);
+                    return;
+                } catch (err) { }
+            }
+            records = certData.map(hydrateRecord);
+            persistRecords();
+        }
+
+        function persistRecords() {
+            localStorage.setItem(ROOT_STORAGE_KEY, JSON.stringify(records));
+        }
+
+        function getTypePrefix(type) {
+            return type === "CERT" ? "CERT" : type === "ACH" ? "ACH" : type === "INT" ? "INT" : "PROJ";
+        }
+
+        function buildRecordId(type) {
+            const prefix = getTypePrefix(type);
+            const used = records
+                .map(r => r.id)
+                .filter(id => id.startsWith(prefix + "_"))
+                .map(id => Number(id.split("_")[1]) || 0);
+            const next = (Math.max(0, ...used) + 1).toString().padStart(3, "0");
+            return `${prefix}_${next}`;
+        }
 
         function openCertPanel() {
-            document.getElementById('cert-panel').classList.add('visible');
-            switchTab('CERT', true); // Initial load
+            document.getElementById("cert-panel").classList.add("visible");
+            renderAdminShell();
+            renderPublicCards();
         }
 
         function closeCertPanel() {
-            document.getElementById('cert-panel-box').classList.add('closing');
-            setTimeout(() => {
-                document.getElementById('cert-panel').classList.remove('visible');
-                document.getElementById('cert-panel-box').classList.remove('closing');
-            }, 200);
+            document.getElementById("cert-panel").classList.remove("visible");
         }
 
-        async function switchTab(type, isInitial = false) {
-            if (isSwitching && !isInitial) return;
-            isSwitching = true;
+        function typeTerminalLines(lines, done) {
+            const logBox = document.getElementById("root-sequence-log");
+            if (!logBox) return;
+            logBox.classList.add("visible");
+            logBox.innerHTML = "";
+            let i = 0;
+            const step = () => {
+                if (i >= lines.length) {
+                    if (done) done();
+                    setTimeout(() => logBox.classList.remove("visible"), 1700);
+                    return;
+                }
+                const p = document.createElement("div");
+                p.textContent = lines[i++];
+                logBox.appendChild(p);
+                setTimeout(step, 260);
+            };
+            step();
+        }
 
-            const grid = document.getElementById('cert-grid');
-            const panelContent = document.getElementById('cert-panel-content');
-            const statusArea = document.getElementById('cert-status-area');
-            const statusText = document.getElementById('cert-system-text');
-            const loader = document.getElementById('cert-system-loader');
-            const progress = document.getElementById('cert-system-progress');
-            const cursorEl = document.querySelector('.cert-cursor');
+        function activateRootMode() {
+            const now = Date.now();
+            if (now < activationCooldownUntil) return;
+            activationCooldownUntil = now + ROOT_SEQUENCE_COOLDOWN_MS;
+            sequenceBuffer = "";
 
-            // Update tab buttons
-            document.querySelectorAll('.cert-tab').forEach(btn => {
-                btn.classList.toggle('active', btn.id === `tab-${type.toLowerCase()}`);
-            });
-
-            currentType = type;
-
-            if (!isInitial) {
-                // Step 1: Fade out current content
-                panelContent.style.opacity = '0';
-                panelContent.style.transform = 'translateY(10px)';
-
-                // Step 2: System Message
-                if (statusArea) statusArea.style.display = 'flex';
-                if (cursorEl) cursorEl.style.display = 'inline-block';
-                statusText.textContent = '';
-                await typeText(statusText, `> switching to ${type === 'CERT' ? 'certifications' : 'achievements'}...`, 15);
-
-                // Step 3: Fast Loading Bar
-                loader.style.display = 'block';
-                progress.style.animation = 'loadBarRun 0.25s linear forwards';
-                await new Promise(r => setTimeout(r, 250));
-
-                // Clear message after switch
-                setTimeout(() => {
-                    statusText.textContent = '';
-                    if (cursorEl) cursorEl.style.display = 'none';
-                }, 400);
-
-                loader.style.display = 'none';
-                progress.style.animation = 'none';
-                void progress.offsetWidth;
-            } else {
-                statusText.textContent = '';
-                if (cursorEl) cursorEl.style.display = 'none';
+            document.body.classList.add("root-admin-mode");
+            const overlay = document.getElementById("root-sequence-overlay");
+            if (overlay) {
+                overlay.classList.add("active");
+                setTimeout(() => overlay.classList.remove("active"), 550);
             }
 
-            // Reset search input on tab switch
-            const searchInput = document.getElementById('cert-search-input');
-            if (searchInput) searchInput.value = '';
-
-            // Step 4: Filter and Render
-            filterCerts(false);
-
-            panelContent.style.opacity = '1';
-            panelContent.style.transform = 'translateY(0)';
-
-            renderCertGrid();
-            isSwitching = false;
+            typeTerminalLines([
+                "encrypted_sequence_detected...",
+                "validating operator signature...",
+                "root_access granted."
+            ], () => {
+                adminUnlocked = true;
+                openCertPanel();
+            });
         }
 
-        function typeText(el, text, speed) {
-            return new Promise(resolve => {
-                let i = 0;
-                function type() {
-                    if (i < text.length) {
-                        el.textContent += text.charAt(i);
-                        i++;
-                        setTimeout(type, speed);
-                    } else {
-                        resolve();
-                    }
+        function attachSecretSequenceListener() {
+            const siteLogo = document.getElementById("site-logo");
+            const armRootZone = () => {
+                rootInputZoneArmed = true;
+                rootInputZoneArmExpiresAt = Date.now() + 12000;
+            };
+            const disarmRootZone = () => {
+                rootInputZoneArmed = false;
+                rootInputZoneArmExpiresAt = 0;
+                sequenceBuffer = "";
+            };
+
+            if (siteLogo) {
+                siteLogo.addEventListener("click", armRootZone);
+                siteLogo.addEventListener("mouseenter", armRootZone);
+                siteLogo.addEventListener("focus", armRootZone);
+            }
+
+            document.addEventListener("pointerdown", function (event) {
+                if (!siteLogo) return;
+                const clickedInsidePanel = siteLogo.contains(event.target);
+                if (!clickedInsidePanel) disarmRootZone();
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeCertPanel();
+                    closeRecord();
+                    closeRecordModal();
+                    return;
                 }
-                type();
+                const target = event.target;
+                if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
+                if (!/^\d$/.test(event.key)) return;
+                if (!rootInputZoneArmed || Date.now() > rootInputZoneArmExpiresAt) {
+                    disarmRootZone();
+                    return;
+                }
+                const now = Date.now();
+                if (now - sequenceLastKeyAt > ROOT_SEQUENCE_TIMEOUT_MS) sequenceBuffer = "";
+                sequenceLastKeyAt = now;
+                sequenceBuffer = (sequenceBuffer + event.key).slice(-6);
+                if (sequenceBuffer === ROOT_SECRET_SEQUENCE) activateRootMode();
             });
         }
 
-        function filterCerts(shouldRender = true) {
-            const query = document.getElementById('cert-search-input').value.toLowerCase();
-
-            // Filter by type AND search query
-            filteredCerts = certData.filter(cert => {
-                const matchesType = cert.type === currentType;
-                const matchesSearch = cert.title.toLowerCase().includes(query) ||
-                    cert.tech.toLowerCase().includes(query) ||
-                    cert.id.toLowerCase().includes(query);
-                return matchesType && matchesSearch;
-            });
-
-            if (shouldRender) renderCertGrid();
+        function adminControlsVisible() {
+            return adminUnlocked ? "flex" : "none";
         }
 
-        function renderCertGrid() {
-            const grid = document.getElementById('cert-grid');
-            if (filteredCerts.length === 0) {
-                grid.innerHTML = '<div class="no-results">no records found in this sector...</div>';
+        function renderAdminShell() {
+            const box = document.getElementById("cert-panel-box");
+            box.classList.remove("closing");
+            box.innerHTML = `
+                <div class="admin-shell">
+                    <aside id="admin-sidebar" class="border-r border-[#1f8a3a] p-4 relative z-10">
+                        <div class="font-mono text-[11px] tracking-[0.2em] text-[#79ff8f] mb-4">SECTORS</div>
+                        ${["CERTIFICATIONS:CERT", "ACHIEVEMENTS:ACH", "INTERNSHIPS:INT", "PROJECTS:PROJ", "SYSTEM_LOGS:LOGS", "SETTINGS:SETTINGS"].map(s => {
+                const [label, value] = s.split(":");
+                return `<button class="admin-sidebar-btn w-full text-left font-mono text-xs border border-[#1f8a3a] px-3 py-2 mb-2 ${currentCategory === value ? "active" : ""}" data-category="${value}">[ ${label} ]</button>`;
+            }).join("")}
+                    </aside>
+                    <main class="p-4 md:p-6 relative z-10 overflow-y-auto">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border border-[#1f8a3a] bg-black/60 p-4">
+                            <div>
+                                <div class="font-mono text-sm text-[#79ff8f]">ROOT_NODE://JEEVAN_DEV_ADMIN</div>
+                                <div class="font-mono text-[11px] tracking-[0.2em] text-[#7ca87f] mt-1">SYSTEM CONTROL INTERFACE v1.0</div>
+                            </div>
+                            <button onclick="closeCertPanel()" class="font-mono text-xs border border-[#ff6262] text-[#ff6262] px-3 py-1">[ EXIT ]</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-3 font-mono text-[11px]">
+                            <span class="border border-[#1f8a3a] px-2 py-1">● DATABASE_SYNCED</span>
+                            <span class="border border-[#1f8a3a] px-2 py-1">● RECORDS_ONLINE</span>
+                            <span class="border border-[#1f8a3a] px-2 py-1">● STORAGE_ACTIVE</span>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <input id="admin-search-input" placeholder="Search records..." class="font-mono text-xs px-3 py-2 border border-[#1f8a3a] bg-black/50 min-w-[220px]">
+                            ${["all", "CERT", "ACH", "INT", "PROJ", "LIVE", "VERIFIED", "COMPLETED"].map(v => `<button class="admin-filter-btn font-mono text-xs border border-[#1f8a3a] px-2 py-1 ${currentFilter === v ? "bg-[#17331d]" : ""}" data-filter="${v}">${v}</button>`).join("")}
+                        </div>
+                        <div class="mt-3 border border-[#1f8a3a] bg-black/50 px-3 py-2 font-mono text-xs ${adminUnlocked ? "text-[#79ff8f]" : "text-[#ff9f1c]"}">
+                            ${adminUnlocked
+                    ? "ROOT MODE ACTIVE: Large action controls are enabled on each record card."
+                    : "READ ONLY VIEW: To unlock EDIT / DUPLICATE / DELETE, arm JEEVAN.dev and type 110406."}
+                        </div>
+                        <div id="admin-record-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-4"></div>
+                        <button id="admin-add-record-btn" style="display:${adminControlsVisible()};" onclick="openRecordModal()" class="fixed bottom-8 right-8 font-mono text-sm border border-[#79ff8f] bg-black text-[#79ff8f] px-5 py-3 shadow-[0_0_18px_rgba(51,255,87,.25)]">+ ADD RECORD</button>
+                    </main>
+                </div>
+            `;
+
+            const sidebarButtons = box.querySelectorAll(".admin-sidebar-btn");
+            sidebarButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const next = btn.getAttribute("data-category");
+                    if (["CERT", "ACH", "INT", "PROJ"].includes(next)) currentCategory = next;
+                    renderAdminShell();
+                });
+            });
+
+            const searchInput = document.getElementById("admin-search-input");
+            searchInput.addEventListener("input", renderRecordList);
+
+            box.querySelectorAll(".admin-filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    currentFilter = btn.getAttribute("data-filter");
+                    renderAdminShell();
+                });
+            });
+
+            renderRecordList();
+            ensureRecordModal();
+        }
+
+        function recordMatchesFilter(record, filter) {
+            if (filter === "all") return true;
+            if (["CERT", "ACH", "INT", "PROJ"].includes(filter)) return record.type === filter;
+            if (filter === "COMPLETED") return (record.status || "").toUpperCase().includes("COMPLETED");
+            if (filter === "LIVE") return (record.status || "").toUpperCase().includes("LIVE");
+            if (filter === "VERIFIED") return Boolean(record.verificationLink);
+            return true;
+        }
+
+        function renderRecordList() {
+            const list = document.getElementById("admin-record-list");
+            if (!list) return;
+            const query = (document.getElementById("admin-search-input")?.value || "").toLowerCase();
+            const visible = records.filter(r => {
+                const inCategory = currentCategory === "LOGS" || currentCategory === "SETTINGS" ? true : r.type === currentCategory;
+                const inFilter = recordMatchesFilter(r, currentFilter);
+                const inQuery = [r.id, r.title, r.desc, r.tech, r.status].join(" ").toLowerCase().includes(query);
+                return inCategory && inFilter && inQuery;
+            });
+
+            if (currentCategory === "LOGS") {
+                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">> logs_online: ${records.length}<br>> root_mode: ${adminUnlocked ? "enabled" : "disabled"}<br>> last_sync: ${new Date().toLocaleString()}</div>`;
+                return;
+            }
+            if (currentCategory === "SETTINGS") {
+                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">> storage_engine: local_json_db<br>> theme_profile: neo_brutalist_cyber<br>> secret_sequence: protected</div>`;
                 return;
             }
 
-            grid.innerHTML = filteredCerts.map((cert, index) => `
-                <div class="cert-grid-card" onclick="triggerCardOpen('${cert.id}', this)" style="border-color:${cert.statusColor}40; --hover-color:${cert.statusColor}; animation-delay: ${index * 50}ms;">
-                    <div class="cert-grid-id" style="color:${cert.statusColor};">${cert.id}</div>
-                    <div class="cert-grid-title">${cert.title}</div>
-                    <span class="cert-grid-status" style="color:${cert.statusColor};border-color:${cert.statusColor};">${cert.statusTag || '[ ' + cert.status + ' ]'}</span>
-                    <div class="cert-grid-desc">${cert.desc}</div>
-                    <div class="cert-grid-cta">> view full record...<span class="cert-cursor"></span></div>
-                </div>
-            `).join('');
-
-            // Trigger animations
-            setTimeout(() => {
-                document.querySelectorAll('.cert-grid-card').forEach(card => {
-                    card.classList.add('animate-in');
-                });
-            }, 50);
-        }
-
-        // Global cursor ref
-        const certCursor = document.getElementById('cursor');
-
-        // ESC key to close panels
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeCertPanel();
-                closeRecord();
+            if (!visible.length) {
+                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] p-4 font-mono text-xs text-[#7ca87f]">No records in this view.</div>`;
+                return;
             }
-        });
 
-        // Combined click handler for feedback + opening
-        async function triggerCardOpen(id, cardEl) {
-            // Immediate feedback: scale handled by CSS :active
-            // System message trigger
-            const statusArea = document.getElementById('cert-status-area');
-            const statusText = document.getElementById('cert-system-text');
-            const cursorEl = document.querySelector('.cert-cursor');
-
-            if (statusArea) statusArea.style.display = 'flex';
-            if (cursorEl) cursorEl.style.display = 'inline-block';
-
-            statusText.textContent = '';
-            // Fast typing for 'opening record...'
-            await typeText(statusText, `> opening record ${id}...`, 10);
-
-            // Interaction delay
-            setTimeout(() => {
-                openRecord(id, cardEl);
-            }, 150);
-        }
-
-        async function openRecord(id, cardEl) {
-            const cert = certData.find(c => c.id === id);
-            if (!cert) return;
-
-            const modal = document.getElementById('cert-record-modal');
-            const box = document.getElementById('cert-record-box');
-            const body = document.getElementById('cert-record-body-content');
-            const statusArea = document.getElementById('cert-status-area');
-            const statusText = document.getElementById('cert-system-text');
-            const cursorEl = document.querySelector('.cert-cursor');
-
-            // Toggle cursor theme for light background
-            if (certCursor) certCursor.classList.add('cursor-dark');
-
-            // System feedback
-            if (statusArea) statusArea.style.display = 'flex';
-            if (cursorEl) cursorEl.style.display = 'inline-block';
-
-            // Populate content
-            const imageHTML = cert.image
-                ? `<img src="${cert.image}" alt="${cert.title}" style="max-width:100%; height:auto; border:2px solid #000; box-shadow:8px 8px 0 rgba(0,0,0,0.1);" onerror="this.parentElement.innerHTML='[ IMAGE_LOAD_ERROR ]';">`
-                : `<div class="cert-image-placeholder">[ SYSTEM_IMG_STUB ]<br>DATA: ${cert.id}<br>SRC: CERT_DB_INTERNAL</div>`;
-
-            let actionAndInspectableHTML = '';
-
-            if (cert.inspectableData) {
-                actionAndInspectableHTML = `
-                    <div style="margin-top: auto;">
-                        <button class="record-action-btn" data-state="closed" onclick="toggleRecordInsights(this, '${cert.id}')">
-                            [ OPEN_RECORD ]
-                        </button>
-                        <div class="cert-system-logs" id="system-logs-container"></div>
-                        <div class="cert-inspectable-section" id="inspectable-section">
-                            <div class="cert-inspect-header">
-                                > record_insights:
-                            </div>
-                            <div class="cert-inspect-grid">
-                                <div class="cert-inspect-block">
-                                    <span class="cert-inspect-label">KEY_LEARNINGS</span>
-                                    <ul class="cert-inspect-list">
-                                        ${cert.inspectableData.learnings.map(l => `<li>${l}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                <div class="cert-inspect-block">
-                                    <span class="cert-inspect-label">SKILLS_EXTRACTED</span>
-                                    <ul class="cert-inspect-list">
-                                        ${cert.inspectableData.skills.map(s => `<li>${s.toUpperCase()}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                ${cert.inspectableData.applied ? `
-                                <div class="cert-inspect-block" style="grid-column: 1 / -1;">
-                                    <span class="cert-inspect-label">REAL_WORLD_APPLICATION</span>
-                                    <ul class="cert-inspect-list">
-                                        ${cert.inspectableData.applied.map(a => `<li>${a}</li>`).join('')}
-                                    </ul>
-                                </div>` : ''}
-                                <div class="cert-insight-box">
-                                    <span class="cert-inspect-label">CORE_INSIGHT</span>
-                                    <p class="cert-insight-quote">${cert.inspectableData.insight}</p>
-                                </div>
-                            </div>
-                        </div>
+            list.innerHTML = visible.map(r => `
+                <article class="admin-record-card border p-3 bg-black/70" style="border-color:${r.statusColor}66;">
+                    <div class="font-mono text-[11px]" style="color:${r.statusColor};">${r.id}</div>
+                    <h4 class="font-mono text-sm mt-1">${r.title}</h4>
+                    <div class="font-mono text-[11px] mt-1">${normalizeTypeLabel(r.type)} · ${r.status} · ${r.year}</div>
+                    <p class="font-mono text-[11px] text-[#9bc79f] mt-2 line-clamp-3">${r.desc}</p>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        <button onclick="openRecord('${r.id}')" class="admin-action-btn border" style="border-color:${r.statusColor};color:${r.statusColor};">[ OPEN ]</button>
+                        <button onclick="editRecord('${r.id}')" style="display:${adminControlsVisible()};" class="admin-action-btn border border-[#79ff8f] text-[#79ff8f]">[ EDIT ]</button>
+                        <button onclick="duplicateRecord('${r.id}')" style="display:${adminControlsVisible()};" class="admin-action-btn border border-[#79ff8f] text-[#79ff8f]">[ DUPLICATE ]</button>
+                        <button onclick="deleteRecord('${r.id}')" style="display:${adminControlsVisible()};" class="admin-action-btn border border-[#ff6262] text-[#ff6262]">[ DELETE ]</button>
                     </div>
-                `;
-            }
+                </article>
+            `).join("");
+        }
 
-            const tags = cert.tech.split(',').map(t => `<span class="cert-tag">${t.trim()}</span>`).join('');
-
+        function openRecord(id) {
+            const cert = records.find(c => c.id === id);
+            if (!cert) return;
+            const modal = document.getElementById("cert-record-modal");
+            const body = document.getElementById("cert-record-body-content");
+            const image = cert.image ? `<img src="${cert.image}" alt="${cert.title}" style="max-width:100%;height:auto;border:2px solid #000;">` : `<div class="cert-image-placeholder">[ NO_MEDIA ]</div>`;
+            const tags = safeSplit(cert.tech).map(t => `<span class="cert-tag" style="border-color:${cert.statusColor};color:${cert.statusColor};">${t}</span>`).join("");
             body.innerHTML = `
                 <div class="cert-record-body">
                     <div class="cert-record-image-side">
-                        <div class="cert-image-frame">
-                            ${imageHTML}
-                        </div>
+                        <div class="cert-image-frame">${image}</div>
                         <div class="cert-record-meta-small">
-                            ${cert.inspectableData?.logs
-                    ? Object.entries(cert.inspectableData.logs).map(([k, v]) => `> ${k}: ${v}<br>`).join('')
-                    : `> record_status: standard<br>> data_verified: true`}
+                            > record_id: ${cert.id}<br>
+                            > organization: ${cert.organization || "N/A"}<br>
+                            > verification: ${cert.verificationLink ? "true" : "false"}<br>
+                            > published_via: root_node_cms
                         </div>
                     </div>
                     <div class="cert-record-content-side">
                         <h2 class="cert-record-title">${cert.title}</h2>
                         <div class="cert-record-stats">
-                            <div class="cert-stat-item">
-                                <div class="cert-stat-label">Status</div>
-                                <div class="cert-stat-value" style="color:${cert.statusColor}">${cert.statusTag || '[ ' + cert.status + ' ]'}</div>
-                            </div>
-                            <div class="cert-stat-item">
-                                <div class="cert-stat-label">Year</div>
-                                <div class="cert-stat-value">${cert.year}</div>
-                            </div>
-                            <div class="cert-stat-item">
-                                <div class="cert-stat-label">Role</div>
-                                <div class="cert-stat-value">${cert.role}</div>
-                            </div>
-                            <div class="cert-stat-item">
-                                <div class="cert-stat-label">Type</div>
-                                <div class="cert-stat-value">${cert.displayType || (cert.type === 'ACH' ? 'ACHIEVEMENT' : 'CERTIFICATION')}</div>
-                            </div>
+                            <div class="cert-stat-item"><div class="cert-stat-label">Status</div><div class="cert-stat-value" style="color:${cert.statusColor}">${cert.status}</div></div>
+                            <div class="cert-stat-item"><div class="cert-stat-label">Date</div><div class="cert-stat-value">${cert.year}</div></div>
+                            <div class="cert-stat-item"><div class="cert-stat-label">Role</div><div class="cert-stat-value">${cert.role}</div></div>
+                            <div class="cert-stat-item"><div class="cert-stat-label">Type</div><div class="cert-stat-value">${normalizeTypeLabel(cert.type)}</div></div>
                         </div>
-                        <div class="cert-record-desc">
-                            > ${cert.customPrefix || `This record validates historical achievement and skill acquisition. Data confirms competence in ${cert.tech}.`}
-                            <br><br>
-                            ${cert.desc}
-                        </div>
-                        <div class="cert-record-tags">
-                            ${tags}
-                        </div>
-                        ${actionAndInspectableHTML}
+                        <div class="cert-record-desc">> ${cert.customPrefix}<br><br>${cert.detailedDescription || cert.desc}</div>
+                        <div class="cert-record-tags">${tags}</div>
                     </div>
-                </div>
-            `;
-
-            // Expansion animation logic
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('visible');
-                box.classList.add('glitch-reveal');
-                setTimeout(() => box.classList.remove('glitch-reveal'), 400);
-            }, 10);
-        }
-
-        async function toggleRecordInsights(btn, certId) {
-            const cert = certData.find(c => c.id === certId);
-            if (!cert) return;
-
-            const logContainer = document.getElementById('system-logs-container');
-            const insightsSection = document.getElementById('inspectable-section');
-            const imageFrame = document.querySelector('.cert-image-frame');
-            const state = btn.getAttribute('data-state');
-
-            if (state === 'closed') {
-                // --- START INSPECTION ---
-                btn.setAttribute('data-state', 'inspecting');
-                btn.classList.add('inspecting');
-                btn.textContent = '[ INSPECTING... ]';
-                logContainer.innerHTML = ''; // Clear previous logs
-
-                const steps = cert.interactionSteps || [
-                    { text: "> accessing certificate...", delay: 200 },
-                    { text: "> validating credentials...", delay: 300 },
-                    { text: "> parsing record...", delay: 250 },
-                    { text: "> extracting insights...", delay: 300 }
-                ];
-
-                for (const step of steps) {
-                    await new Promise(r => setTimeout(r, step.delay));
-                    const p = document.createElement('p');
-                    p.textContent = step.text;
-                    logContainer.appendChild(p);
-                }
-
-                // --- REVEAL INSIGHTS ---
-                insightsSection.classList.add('visible');
-                if (imageFrame) imageFrame.classList.add('highlighted');
-                btn.classList.remove('inspecting');
-                btn.classList.add('ready');
-                btn.textContent = '[ RECORD READY ]';
-                btn.setAttribute('data-state', 'open');
-
-            } else if (state === 'open') {
-                // --- COLLAPSE INSIGHTS ---
-                insightsSection.classList.remove('visible');
-                if (imageFrame) imageFrame.classList.remove('highlighted');
-                logContainer.innerHTML = '';
-
-                btn.classList.remove('ready');
-                btn.textContent = '[ OPEN_RECORD ]';
-                btn.setAttribute('data-state', 'closed');
-            }
+                </div>`;
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("visible"), 10);
         }
 
         function closeRecord() {
-            const modal = document.getElementById('cert-record-modal');
-            const statusText = document.getElementById('cert-system-text');
-            const cursorEl = document.querySelector('.cert-cursor');
-
-            // Revert cursor theme
-            if (certCursor) certCursor.classList.remove('cursor-dark');
-
-            modal.classList.remove('visible');
-            setTimeout(() => {
-                modal.style.display = 'none';
-
-                // Revert system message
-                if (statusText) statusText.textContent = '> system idle';
-                if (cursorEl) cursorEl.style.display = 'inline-block';
-            }, 300);
+            const modal = document.getElementById("cert-record-modal");
+            modal.classList.remove("visible");
+            setTimeout(() => { modal.style.display = "none"; }, 260);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const track = document.getElementById('cert-marquee-track');
-            if (track) {
-                const marqueeData = [...certData, ...certData];
-                track.innerHTML = marqueeData.map(cert => `
-                    <div class="cert-card" onclick="triggerCardOpen('${cert.id}', this)" style="box-shadow:4px 4px 0 ${cert.statusColor}; --hover-color:${cert.statusColor};">
-                        <div class="cert-header">
-                            <span class="cert-id" style="color:${cert.statusColor};">${cert.id}</span>
-                            <span class="cert-status" style="color:${cert.statusColor};border-color:${cert.statusColor};">${cert.statusTag || '[ ' + cert.status + ' ]'}</span>
-                        </div>
-                        <div class="cert-title">${cert.title}</div>
-                        <div class="cert-desc">${cert.desc}</div>
-                        <div class="cert-hint" style="color:${cert.statusColor};">> VIEW FULL RECORD...<span class="tc-cursor">_</span></div>
+        function ensureRecordModal() {
+            if (document.getElementById("admin-record-modal")) return;
+            const modal = document.createElement("div");
+            modal.id = "admin-record-modal";
+            modal.style.cssText = "position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:20px;";
+            modal.innerHTML = `
+                <div style="width:min(1100px,95vw);max-height:90vh;overflow:auto;background:#050805;border:2px solid #1f8a3a;padding:16px;color:#d4ffd8;">
+                    <div class="flex items-center justify-between border border-[#1f8a3a] p-3">
+                        <div class="font-mono text-sm text-[#79ff8f]">[ RECORD_TEMPLATE_ENGINE ]</div>
+                        <button onclick="closeRecordModal()" class="font-mono text-xs border border-[#ff6262] text-[#ff6262] px-2 py-1">[ CLOSE ]</button>
                     </div>
-                `).join('');
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                        <form id="admin-record-form" class="space-y-2 font-mono text-xs">
+                            <div class="grid grid-cols-2 gap-2">
+                                <label>TYPE<select name="type"><option value="CERT">Certification</option><option value="ACH">Achievement</option><option value="INT">Internship</option><option value="PROJ">Project</option></select></label>
+                                <label>COLOR<select name="themeColor"><option value="green">Green</option><option value="purple">Purple</option><option value="orange">Orange</option><option value="blue">Blue</option><option value="red">Red</option><option value="pink">Pink</option></select></label>
+                            </div>
+                            <label>Record ID<input name="id" readonly></label>
+                            <label>Title<input name="title" required></label>
+                            <label>Short Description<textarea name="desc" rows="2"></textarea></label>
+                            <label>Detailed Description<textarea name="detailedDescription" rows="4"></textarea></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label>Status<input name="status" value="COMPLETED"></label>
+                                <label>Date<input name="year" value="${new Date().getFullYear()}"></label>
+                            </div>
+                            <label>Organization<input name="organization"></label>
+                            <label>Role<input name="role"></label>
+                            <label>Tags / Skills<input name="tech" placeholder="React, AI, Node.js"></label>
+                            <label>External Link<input name="externalLink"></label>
+                            <label>Verification Link<input name="verificationLink"></label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label>Certificate Image<input type="file" name="certificateImage" accept="image/*,.pdf"></label>
+                                <label>Preview / Screenshot<input type="file" name="previewImage" accept="image/*"></label>
+                            </div>
+                            <button type="submit" class="font-mono text-sm border border-[#79ff8f] text-[#79ff8f] px-4 py-2">[ SAVE_RECORD ]</button>
+                        </form>
+                        <div>
+                            <div class="font-mono text-xs mb-2">REAL-TIME CARD PREVIEW</div>
+                            <div id="admin-live-preview" class="border border-[#1f8a3a] p-3 min-h-[220px] bg-black/40"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const form = modal.querySelector("#admin-record-form");
+            form.type.addEventListener("change", () => { if (!editingRecordId) form.id.value = buildRecordId(form.type.value); renderLivePreview(); });
+            form.addEventListener("input", renderLivePreview);
+            form.addEventListener("submit", saveRecordFromForm);
+        }
 
-                // ===== DEPTH SHADOW EFFECT =====
-                const certCards = document.querySelectorAll('#cert-marquee-track .cert-card');
-                const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+        function openRecordModal() {
+            editingRecordId = null;
+            ensureRecordModal();
+            const modal = document.getElementById("admin-record-modal");
+            const form = modal.querySelector("#admin-record-form");
+            form.reset();
+            form.status.value = "COMPLETED";
+            form.year.value = new Date().getFullYear();
+            form.type.value = currentCategory === "ACH" || currentCategory === "INT" || currentCategory === "PROJ" ? currentCategory : "CERT";
+            form.id.value = buildRecordId(form.type.value);
+            modal.style.display = "flex";
+            renderLivePreview();
+        }
 
-                if (isFinePointer) {
-                    certCards.forEach(card => {
-                        let animationFrameId = null;
+        function closeRecordModal() {
+            const modal = document.getElementById("admin-record-modal");
+            if (modal) modal.style.display = "none";
+        }
 
-                        card.addEventListener('mousemove', (e) => {
-                            cancelAnimationFrame(animationFrameId);
-                            animationFrameId = requestAnimationFrame(() => {
-                                const rect = card.getBoundingClientRect();
-                                const x = e.clientX - rect.left - rect.width / 2;
-                                const y = e.clientY - rect.top - rect.height / 2;
+        function renderLivePreview() {
+            const modal = document.getElementById("admin-record-modal");
+            if (!modal || modal.style.display === "none") return;
+            const form = modal.querySelector("#admin-record-form");
+            const title = form.title.value || "Untitled Record";
+            const id = form.id.value || "RECORD_000";
+            const status = form.status.value || "COMPLETED";
+            const desc = form.desc.value || "Short record summary";
+            const color = colorMap[form.themeColor.value] || colorMap.green;
+            document.getElementById("admin-live-preview").innerHTML = `
+                <div class="admin-record-card border p-3" style="border-color:${color};">
+                    <div class="font-mono text-[11px]" style="color:${color};">${id}</div>
+                    <div class="font-mono text-sm mt-1">${title}</div>
+                    <div class="font-mono text-[11px] mt-1">${form.type.value} · ${status} · ${form.year.value || new Date().getFullYear()}</div>
+                    <div class="font-mono text-[11px] text-[#9bc79f] mt-2">${desc}</div>
+                </div>`;
+        }
 
-                                const normX = x / (rect.width / 2);
-                                const normY = y / (rect.height / 2);
+        async function readFileAsDataUrl(file) {
+            if (!file) return "";
+            return await new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result || "");
+                reader.onerror = () => resolve("");
+                reader.readAsDataURL(file);
+            });
+        }
 
-                                const MAX_TRANSLATE = 2;
-                                const MAX_SHADOW_OFFSET = 10;
-                                const SHADOW_BLUR = 25;
+        async function saveRecordFromForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const themeColor = form.themeColor.value;
+            const statusColor = colorMap[themeColor] || colorMap.green;
+            const certificateImage = await readFileAsDataUrl(form.certificateImage.files[0]);
+            const previewImage = await readFileAsDataUrl(form.previewImage.files[0]);
 
-                                const translateX = -normX * MAX_TRANSLATE;
-                                const translateY = -normY * MAX_TRANSLATE;
-                                const shadowX = -normX * MAX_SHADOW_OFFSET;
-                                const shadowY = -normY * MAX_SHADOW_OFFSET;
+            const base = {
+                id: form.id.value,
+                type: form.type.value,
+                title: form.title.value,
+                desc: form.desc.value,
+                detailedDescription: form.detailedDescription.value,
+                status: form.status.value || "COMPLETED",
+                statusTag: `[ ${(form.status.value || "COMPLETED").toUpperCase()} ]`,
+                statusColor,
+                year: form.year.value,
+                organization: form.organization.value,
+                role: form.role.value,
+                tech: form.tech.value,
+                externalLink: form.externalLink.value,
+                verificationLink: form.verificationLink.value,
+                image: certificateImage || previewImage || "",
+                displayType: normalizeTypeLabel(form.type.value),
+                customPrefix: "Dynamically published via ROOT_NODE template engine.",
+                media: { certificateImage, previewImage },
+                inspectableData: extractSkillData({ tech: form.tech.value, desc: form.detailedDescription.value || form.desc.value, role: form.role.value })
+            };
 
-                                const hoverColor = card.style.getPropertyValue('--hover-color').trim();
-                                const shadowRgb = hoverColor ? hexToRgb(hoverColor) : '51, 255, 87';
-
-                                card.style.transform = `scale(1.02) translateX(${translateX}px) translateY(${translateY}px)`;
-                                card.style.boxShadow = `${shadowX}px ${shadowY}px ${SHADOW_BLUR}px rgba(${shadowRgb}, 0.25)`;
-
-                                const highlightX = e.clientX - rect.left;
-                                const highlightY = e.clientY - rect.top;
-                                card.style.background = `radial-gradient(circle at ${highlightX}px ${highlightY}px, rgba(255, 255, 255, 0.05) 0%, transparent 40%), #0f0f0f`;
-                            });
-                        });
-
-                        card.addEventListener('mouseleave', () => {
-                            cancelAnimationFrame(animationFrameId);
-                            card.style.transform = '';
-                            card.style.boxShadow = '';
-                            card.style.background = '';
-                        });
-                    });
-                }
-
-                function hexToRgb(hex) {
-                    hex = hex.replace('#', '');
-                    if (hex.length === 3) hex = hex.split('').map(char => char + char).join('');
-                    const bigint = parseInt(hex, 16);
-                    return `${(bigint >> 16) & 255},${(bigint >> 8) & 255},${bigint & 255}`;
-                }
+            if (editingRecordId) {
+                records = records.map(r => r.id === editingRecordId ? hydrateRecord(base) : r);
+            } else {
+                records.unshift(hydrateRecord(base));
             }
+
+            persistRecords();
+            closeRecordModal();
+            renderAdminShell();
+            renderPublicCards();
+        }
+
+        function editRecord(id) {
+            const item = records.find(r => r.id === id);
+            if (!item || !adminUnlocked) return;
+            editingRecordId = id;
+            ensureRecordModal();
+            const modal = document.getElementById("admin-record-modal");
+            const form = modal.querySelector("#admin-record-form");
+            form.type.value = item.type;
+            form.id.value = item.id;
+            form.title.value = item.title;
+            form.desc.value = item.desc;
+            form.detailedDescription.value = item.detailedDescription || "";
+            form.status.value = item.status;
+            form.year.value = item.year;
+            form.organization.value = item.organization || "";
+            form.role.value = item.role || "";
+            form.tech.value = item.tech || "";
+            form.externalLink.value = item.externalLink || "";
+            form.verificationLink.value = item.verificationLink || "";
+            form.themeColor.value = Object.keys(colorMap).find(k => colorMap[k] === item.statusColor) || "green";
+            modal.style.display = "flex";
+            renderLivePreview();
+        }
+
+        function deleteRecord(id) {
+            if (!adminUnlocked) return;
+            records = records.filter(r => r.id !== id);
+            persistRecords();
+            renderAdminShell();
+            renderPublicCards();
+        }
+
+        function duplicateRecord(id) {
+            if (!adminUnlocked) return;
+            const item = records.find(r => r.id === id);
+            if (!item) return;
+            const copy = hydrateRecord({ ...item, id: buildRecordId(item.type), title: item.title + " (Copy)" });
+            records.unshift(copy);
+            persistRecords();
+            renderAdminShell();
+            renderPublicCards();
+        }
+
+        function renderPublicCards() {
+            const track = document.getElementById("cert-marquee-track");
+            if (!track) return;
+            const marqueeData = [...records, ...records];
+            track.innerHTML = marqueeData.map(cert => `
+                <div class="cert-card" onclick="openRecord('${cert.id}')" style="box-shadow:4px 4px 0 ${cert.statusColor}; --hover-color:${cert.statusColor};">
+                    <div class="cert-header">
+                        <span class="cert-id" style="color:${cert.statusColor};">${cert.id}</span>
+                        <span class="cert-status" style="color:${cert.statusColor};border-color:${cert.statusColor};">${cert.statusTag || "[ " + cert.status + " ]"}</span>
+                    </div>
+                    <div class="cert-title">${cert.title}</div>
+                    <div class="cert-desc">${cert.desc}</div>
+                    <div class="cert-hint" style="color:${cert.statusColor};">> VIEW FULL RECORD...<span class="tc-cursor">_</span></div>
+                </div>`).join("");
+        }
+
+        function switchTab(type) {
+            currentCategory = type;
+            renderAdminShell();
+        }
+
+        function filterCerts() {
+            renderRecordList();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeRecords();
+            renderPublicCards();
+            attachSecretSequenceListener();
         });
     </script>
 

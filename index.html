@@ -2671,6 +2671,8 @@
         const ROOT_SEQUENCE_TIMEOUT_MS = 3000;
         const ROOT_SEQUENCE_COOLDOWN_MS = 4500;
         const ROOT_STORAGE_KEY = "jeevan_root_records_v2";
+        const LINKEDIN_SYNC_STORAGE_KEY = "jeevan_linkedin_sync_engine_v1";
+        const LINKEDIN_PRIMARY_SOURCE = "https://www.linkedin.com/in/jeevan-charugundla/";
 
         const colorMap = {
             green: "#33FF57",
@@ -3100,6 +3102,18 @@
         let rootInputZoneArmed = false;
         let rootInputZoneArmExpiresAt = 0;
         let editingRecordId = null;
+        let pendingLinkedInImports = [];
+        let syncPollTimer = null;
+        let linkedinSyncState = {
+            connectionStatus: "DISCONNECTED",
+            lastSyncTime: "NEVER",
+            autoImportStatus: "IDLE",
+            lastImportedPost: "NONE",
+            autoPublish: true,
+            manualApprovalMode: false,
+            backendWebhookUrl: "",
+            recentLogs: []
+        };
 
         function normalizeTypeLabel(type) {
             return type === "CERT" ? "CERTIFICATION" : type === "ACH" ? "ACHIEVEMENT" : type === "INT" ? "INTERNSHIP" : "PROJECT";
@@ -3156,6 +3170,190 @@
             persistRecords();
         }
 
+        function loadLinkedInSyncState() {
+            const saved = localStorage.getItem(LINKEDIN_SYNC_STORAGE_KEY);
+            if (saved) {
+                try {
+                    linkedinSyncState = { ...linkedinSyncState, ...JSON.parse(saved) };
+                } catch (err) { }
+            }
+            if (!Array.isArray(linkedinSyncState.recentLogs)) linkedinSyncState.recentLogs = [];
+        }
+
+        function persistLinkedInSyncState() {
+            localStorage.setItem(LINKEDIN_SYNC_STORAGE_KEY, JSON.stringify(linkedinSyncState));
+        }
+
+        function pushLinkedInLog(message) {
+            const line = `> ${message}`;
+            linkedinSyncState.recentLogs = [line, ...linkedinSyncState.recentLogs].slice(0, 8);
+            persistLinkedInSyncState();
+            const statusLog = document.getElementById("root-sequence-log");
+            if (statusLog && adminUnlocked) {
+                statusLog.classList.add("visible");
+                statusLog.innerHTML = `<div>${line}</div>`;
+                setTimeout(() => statusLog.classList.remove("visible"), 900);
+            }
+        }
+
+        function normalizeLinkedInSource(value) {
+            return (value || "").trim().toLowerCase().replace(/\/+$/, "/");
+        }
+
+        function classifyLinkedInContent(text) {
+            const value = (text || "").toLowerCase();
+            const matches = (terms) => terms.some(t => value.includes(t));
+            if (matches(["internship", "trainee", "simulation", "industrial training", "ai internship", "work experience"])) return "INT";
+            if (matches(["top 10", "winner", "finalist", "shortlisted", "recognition", "award", "merit"])) return "ACH";
+            if (matches(["certificate", "certification", "completed", "workshop", "hackathon participation", "verified", "training"])) return "CERT";
+            if (matches(["launched", "built", "deployed", "ai app", "flutter app", "startup", "saas", "product release"])) return "PROJ";
+            return "ACH";
+        }
+
+        function extractSkillsFromText(text) {
+            const bank = ["react", "node", "firebase", "python", "flutter", "ai", "ml", "nlp", "docker", "api", "websocket", "saas", "next.js"];
+            const lower = (text || "").toLowerCase();
+            const found = bank.filter(skill => lower.includes(skill));
+            return found.length ? found.map(s => s.toUpperCase()).join(", ") : "Problem Solving, System Design, Execution";
+        }
+
+        function fingerprintLinkedInPost(post) {
+            const base = `${post.postId || ""}|${post.url || ""}|${post.text || ""}|${post.title || ""}`;
+            let hash = 0;
+            for (let i = 0; i < base.length; i++) hash = ((hash << 5) - hash) + base.charCodeAt(i);
+            return `li_${Math.abs(hash)}`;
+        }
+
+        function createRecordFromLinkedInPost(post) {
+            const mergedText = [post.title, post.text, post.description].filter(Boolean).join(" ");
+            const type = classifyLinkedInContent(mergedText);
+            const colorByType = { CERT: colorMap.blue, ACH: colorMap.pink, INT: colorMap.green, PROJ: colorMap.orange };
+            const id = buildRecordId(type);
+            const skills = post.skills?.length ? post.skills.join(", ") : extractSkillsFromText(mergedText);
+            return hydrateRecord({
+                id,
+                type,
+                title: post.title || "LinkedIn Activity Update",
+                desc: (post.text || post.description || "Imported from LinkedIn activity feed.").slice(0, 220),
+                detailedDescription: post.text || post.description || "No detailed description provided by source.",
+                status: "LIVE",
+                statusTag: "[ LIVE_SYNC ]",
+                statusColor: colorByType[type] || colorMap.green,
+                year: post.date ? new Date(post.date).getFullYear().toString() : new Date().getFullYear().toString(),
+                organization: post.organization || "LinkedIn",
+                role: post.role || "DEVELOPER UPDATE",
+                tech: skills,
+                externalLink: post.url || LINKEDIN_PRIMARY_SOURCE,
+                verificationLink: post.url || "",
+                image: post.image || "",
+                customPrefix: "Synchronized from verified LinkedIn source via LINKEDIN_SYNC_ENGINE.",
+                inspectableData: {
+                    logs: {
+                        source: "linkedin_sync_engine",
+                        profile: LINKEDIN_PRIMARY_SOURCE,
+                        imported_at: new Date().toISOString(),
+                        fingerprint: fingerprintLinkedInPost(post)
+                    },
+                    skills: safeSplit(skills),
+                    learnings: [post.text || "Synchronized developer milestone."],
+                    applied: ["Portfolio Intelligence Update"],
+                    insight: "Live activity converted into portfolio intelligence."
+                }
+            });
+        }
+
+        function isDuplicateLinkedInPost(post) {
+            const fingerprint = fingerprintLinkedInPost(post);
+            return records.some(r => r.inspectableData?.logs?.fingerprint === fingerprint);
+        }
+
+        function ingestLinkedInPayload(payload) {
+            pushLinkedInLog("linkedin_signal_detected...");
+            const source = normalizeLinkedInSource(payload?.profileUrl || payload?.sourceProfile || "");
+            if (source !== normalizeLinkedInSource(LINKEDIN_PRIMARY_SOURCE)) {
+                pushLinkedInLog("external_source_rejected.");
+                linkedinSyncState.connectionStatus = "SOURCE_BLOCKED";
+                persistLinkedInSyncState();
+                renderAdminShell();
+                return { ok: false, reason: "INVALID_SOURCE" };
+            }
+
+            pushLinkedInLog("external_source_verified...");
+            linkedinSyncState.connectionStatus = "CONNECTED";
+            const posts = Array.isArray(payload?.posts) ? payload.posts : (payload?.post ? [payload.post] : []);
+            const freshPosts = posts.filter(p => !isDuplicateLinkedInPost(p));
+
+            if (!freshPosts.length) {
+                linkedinSyncState.autoImportStatus = "NO_NEW_CONTENT";
+                linkedinSyncState.lastSyncTime = new Date().toLocaleString();
+                persistLinkedInSyncState();
+                renderAdminShell();
+                return { ok: true, imported: 0 };
+            }
+
+            pushLinkedInLog("parsing developer activity...");
+            const generated = freshPosts.map(createRecordFromLinkedInPost);
+
+            if (linkedinSyncState.manualApprovalMode) {
+                pendingLinkedInImports = [...generated, ...pendingLinkedInImports];
+                linkedinSyncState.autoImportStatus = "PENDING_APPROVAL";
+            } else if (linkedinSyncState.autoPublish) {
+                records = [...generated, ...records];
+                persistRecords();
+                renderPublicCards();
+                linkedinSyncState.autoImportStatus = "PUBLISHED";
+            } else {
+                pendingLinkedInImports = [...generated, ...pendingLinkedInImports];
+                linkedinSyncState.autoImportStatus = "QUEUED";
+            }
+
+            linkedinSyncState.lastSyncTime = new Date().toLocaleString();
+            linkedinSyncState.lastImportedPost = generated[0]?.title || "UNKNOWN";
+            persistLinkedInSyncState();
+            pushLinkedInLog("generating portfolio node...");
+            pushLinkedInLog("sync completed.");
+            renderAdminShell();
+            return { ok: true, imported: generated.length };
+        }
+
+        function approvePendingLinkedInImports() {
+            if (!pendingLinkedInImports.length) return;
+            records = [...pendingLinkedInImports, ...records];
+            pendingLinkedInImports = [];
+            persistRecords();
+            linkedinSyncState.autoImportStatus = "PUBLISHED";
+            linkedinSyncState.lastSyncTime = new Date().toLocaleString();
+            persistLinkedInSyncState();
+            pushLinkedInLog("manual approval committed.");
+            renderAdminShell();
+            renderPublicCards();
+        }
+
+        async function pollLinkedInWebhook() {
+            if (!linkedinSyncState.backendWebhookUrl) return;
+            try {
+                linkedinSyncState.autoImportStatus = "SYNCING";
+                persistLinkedInSyncState();
+                const response = await fetch(linkedinSyncState.backendWebhookUrl, { method: "GET" });
+                if (!response.ok) throw new Error(`HTTP_${response.status}`);
+                const payload = await response.json();
+                ingestLinkedInPayload(payload);
+            } catch (err) {
+                linkedinSyncState.autoImportStatus = "ERROR";
+                linkedinSyncState.connectionStatus = "UNREACHABLE";
+                linkedinSyncState.lastSyncTime = new Date().toLocaleString();
+                persistLinkedInSyncState();
+                renderAdminShell();
+            }
+        }
+
+        function configureLinkedInSyncPolling() {
+            if (syncPollTimer) clearInterval(syncPollTimer);
+            if (!linkedinSyncState.autoPublish && !linkedinSyncState.manualApprovalMode) return;
+            if (!linkedinSyncState.backendWebhookUrl) return;
+            syncPollTimer = setInterval(pollLinkedInWebhook, 45000);
+        }
+
         function persistRecords() {
             localStorage.setItem(ROOT_STORAGE_KEY, JSON.stringify(records));
         }
@@ -3182,6 +3380,17 @@
 
         function closeCertPanel() {
             document.getElementById("cert-panel").classList.remove("visible");
+        }
+
+        function returnToPublicFeed() {
+            closeCertPanel();
+            closeRecord();
+            closeRecordModal();
+            adminUnlocked = false;
+            document.body.classList.remove("root-admin-mode");
+            rootInputZoneArmed = false;
+            rootInputZoneArmExpiresAt = 0;
+            sequenceBuffer = "";
         }
 
         function typeTerminalLines(lines, done) {
@@ -3284,7 +3493,7 @@
                 <div class="admin-shell">
                     <aside id="admin-sidebar" class="border-r border-[#1f8a3a] p-4 relative z-10">
                         <div class="font-mono text-[11px] tracking-[0.2em] text-[#79ff8f] mb-4">SECTORS</div>
-                        ${["CERTIFICATIONS:CERT", "ACHIEVEMENTS:ACH", "INTERNSHIPS:INT", "PROJECTS:PROJ", "SYSTEM_LOGS:LOGS", "SETTINGS:SETTINGS"].map(s => {
+                        ${["CERTIFICATIONS:CERT", "ACHIEVEMENTS:ACH", "INTERNSHIPS:INT", "PROJECTS:PROJ", "SYSTEM_LOGS:LOGS", "LINKEDIN_SYNC_ENGINE:SETTINGS"].map(s => {
                 const [label, value] = s.split(":");
                 return `<button class="admin-sidebar-btn w-full text-left font-mono text-xs border border-[#1f8a3a] px-3 py-2 mb-2 ${currentCategory === value ? "active" : ""}" data-category="${value}">[ ${label} ]</button>`;
             }).join("")}
@@ -3295,7 +3504,10 @@
                                 <div class="font-mono text-sm text-[#79ff8f]">ROOT_NODE://JEEVAN_DEV_ADMIN</div>
                                 <div class="font-mono text-[11px] tracking-[0.2em] text-[#7ca87f] mt-1">SYSTEM CONTROL INTERFACE v1.0</div>
                             </div>
-                            <button onclick="closeCertPanel()" class="font-mono text-xs border border-[#ff6262] text-[#ff6262] px-3 py-1">[ EXIT ]</button>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="returnToPublicFeed()" class="font-mono text-xs border border-[#79ff8f] text-[#79ff8f] px-3 py-1">[ RETURN_PUBLIC_FEED ]</button>
+                                <button onclick="closeCertPanel()" class="font-mono text-xs border border-[#ff6262] text-[#ff6262] px-3 py-1">[ CLOSE ]</button>
+                            </div>
                         </div>
                         <div class="flex flex-wrap gap-2 mt-3 font-mono text-[11px]">
                             <span class="border border-[#1f8a3a] px-2 py-1">● DATABASE_SYNCED</span>
@@ -3361,11 +3573,33 @@
             });
 
             if (currentCategory === "LOGS") {
-                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">> logs_online: ${records.length}<br>> root_mode: ${adminUnlocked ? "enabled" : "disabled"}<br>> last_sync: ${new Date().toLocaleString()}</div>`;
+                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">> logs_online: ${records.length}<br>> root_mode: ${adminUnlocked ? "enabled" : "disabled"}<br>> last_sync: ${linkedinSyncState.lastSyncTime}<br><br>${linkedinSyncState.recentLogs.map(x => `${x}<br>`).join("")}</div>`;
                 return;
             }
             if (currentCategory === "SETTINGS") {
-                list.innerHTML = `<div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">> storage_engine: local_json_db<br>> theme_profile: neo_brutalist_cyber<br>> secret_sequence: protected</div>`;
+                list.innerHTML = `
+                    <div class="col-span-full border border-[#1f8a3a] bg-black/60 p-4 font-mono text-xs">
+                        <div class="text-[#79ff8f] mb-2">[ LINKEDIN_SYNC_ENGINE ]</div>
+                        ● CONNECTION_STATUS: ${linkedinSyncState.connectionStatus}<br>
+                        ● LAST_SYNC_TIME: ${linkedinSyncState.lastSyncTime}<br>
+                        ● AUTO_IMPORT_STATUS: ${linkedinSyncState.autoImportStatus}<br>
+                        ● LAST_IMPORTED_POST: ${linkedinSyncState.lastImportedPost}<br>
+                        ● AUTO_PUBLISH_TOGGLE: ${linkedinSyncState.autoPublish ? "ON" : "OFF"}<br>
+                        ● MANUAL_APPROVAL_MODE: ${linkedinSyncState.manualApprovalMode ? "ON" : "OFF"}<br>
+                        ● SOURCE_LOCK: ${LINKEDIN_PRIMARY_SOURCE}<br>
+                        ● PENDING_IMPORTS: ${pendingLinkedInImports.length}<br><br>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <button onclick="toggleLinkedInAutoPublish()" class="admin-action-btn border border-[#79ff8f] text-[#79ff8f]">[ TOGGLE AUTO_PUBLISH ]</button>
+                            <button onclick="toggleLinkedInManualApproval()" class="admin-action-btn border border-[#79ff8f] text-[#79ff8f]">[ TOGGLE MANUAL_APPROVAL ]</button>
+                            <button onclick="approvePendingLinkedInImports()" class="admin-action-btn border border-[#3B82F6] text-[#3B82F6]">[ APPROVE PENDING ]</button>
+                            <button onclick="manualLinkedInSync()" class="admin-action-btn border border-[#FF9F1C] text-[#FF9F1C]">[ RUN SYNC ]</button>
+                            <button onclick="simulateLinkedInImport()" class="admin-action-btn border border-[#A855F7] text-[#A855F7]">[ SIMULATE EVENT ]</button>
+                        </div>
+                        <div class="mb-2">BACKEND_WEBHOOK_URL (n8n/Functions):</div>
+                        <input id="linkedin-webhook-input" value="${linkedinSyncState.backendWebhookUrl || ""}" placeholder="https://your-backend.com/linkedin-sync" class="font-mono text-xs px-3 py-2 border border-[#1f8a3a] bg-black/50 w-full">
+                        <button onclick="saveLinkedInWebhookUrl()" class="admin-action-btn border border-[#79ff8f] text-[#79ff8f] mt-2">[ SAVE WEBHOOK ]</button>
+                        <div class="mt-3 text-[#9bc79f]">Pipeline contract: GET endpoint returns JSON with { profileUrl, posts:[{ postId,title,text,date,url,image,skills,organization,role }] }.</div>
+                    </div>`;
                 return;
             }
 
@@ -3633,14 +3867,80 @@
             renderAdminShell();
         }
 
+        function toggleLinkedInAutoPublish() {
+            linkedinSyncState.autoPublish = !linkedinSyncState.autoPublish;
+            persistLinkedInSyncState();
+            configureLinkedInSyncPolling();
+            renderAdminShell();
+        }
+
+        function toggleLinkedInManualApproval() {
+            linkedinSyncState.manualApprovalMode = !linkedinSyncState.manualApprovalMode;
+            persistLinkedInSyncState();
+            configureLinkedInSyncPolling();
+            renderAdminShell();
+        }
+
+        function saveLinkedInWebhookUrl() {
+            const input = document.getElementById("linkedin-webhook-input");
+            if (!input) return;
+            linkedinSyncState.backendWebhookUrl = (input.value || "").trim();
+            persistLinkedInSyncState();
+            configureLinkedInSyncPolling();
+            renderAdminShell();
+        }
+
+        function manualLinkedInSync() {
+            if (!linkedinSyncState.backendWebhookUrl) {
+                linkedinSyncState.autoImportStatus = "WEBHOOK_REQUIRED";
+                persistLinkedInSyncState();
+                renderAdminShell();
+                return;
+            }
+            pollLinkedInWebhook();
+        }
+
+        function simulateLinkedInImport() {
+            const demoPayload = {
+                profileUrl: LINKEDIN_PRIMARY_SOURCE,
+                posts: [{
+                    postId: "demo_" + Date.now(),
+                    title: "AI Product milestone shipped",
+                    text: "Built and deployed a SaaS AI app release with realtime analytics and Firebase backend.",
+                    date: new Date().toISOString(),
+                    url: LINKEDIN_PRIMARY_SOURCE,
+                    organization: "JEEVAN.dev",
+                    role: "Builder",
+                    skills: ["AI", "Firebase", "SaaS", "Realtime"]
+                }]
+            };
+            ingestLinkedInPayload(demoPayload);
+        }
+
         function filterCerts() {
             renderRecordList();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Always boot in public mode; data persists via localStorage.
+            adminUnlocked = false;
+            document.body.classList.remove("root-admin-mode");
+            const panel = document.getElementById("cert-panel");
+            if (panel) panel.classList.remove("visible");
             initializeRecords();
+            loadLinkedInSyncState();
             renderPublicCards();
             attachSecretSequenceListener();
+            configureLinkedInSyncPolling();
+
+            window.LINKEDIN_SYNC_ENGINE = {
+                source: LINKEDIN_PRIMARY_SOURCE,
+                ingestLinkedInPayload,
+                manualLinkedInSync,
+                simulateLinkedInImport,
+                approvePendingLinkedInImports,
+                getState: () => ({ ...linkedinSyncState, pendingImports: pendingLinkedInImports.length })
+            };
         });
     </script>
 
